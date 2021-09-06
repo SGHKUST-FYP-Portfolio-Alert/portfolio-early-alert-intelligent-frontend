@@ -6,8 +6,15 @@ import { withRouter } from 'react-router-dom';
 import { colors } from '@material-ui/core';
 import classnames from 'classnames'
 import Chip from '@material-ui/core/Chip';
+import IconButton from '@material-ui/core/IconButton';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CancelIcon from '@material-ui/icons/Cancel';
+
 
 const useStyles = makeStyles((theme) => ({
+  companyName: {
+    fontWeight: 'bold',
+  },
   dashboard: {
     textAlign: 'center',
     padding: theme.spacing(3),
@@ -28,6 +35,24 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {
       margin: theme.spacing(0.5),
     }
+  },
+  feedbackRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    backgroundColor: colors.grey[100],
+    color: colors.grey[600],
+    paddingTop: theme.spacing(1),
+    paddingBottom: `${theme.spacing(1)}px !important`
+  },
+  feedbackButtonContainer: {
+    display: 'flex'
+  },
+  iconButton: {
+    padding: 0
+  },
+  Row: {
+    display: 'flex',
+    justifyContent: 'space-between'
   }
 }));
 
@@ -50,15 +75,18 @@ const Dashboard = (props) => {
             item.type === 'warning'? classes.cardWarning : null
           )}
           key={index}
-          onClick={()=>history.push("/counterparty?id="+item.company_id)}
         >
-          <CardContent>
-            <Typography color="textSecondary">
-              {item.type}
-            </Typography>
-            <Typography variant="h5">
-              {item.company_name}
-            </Typography>
+          <CardContent
+            onClick={()=>history.push("/counterparty?id="+item.company_id)}
+          >
+            <div className={classes.Row}>
+              <Typography variant="h6" className={classes.companyName}>
+                {item.company_name}
+              </Typography>
+              <Typography color="textSecondary">
+                {item.type}
+              </Typography>
+            </div>
             <Typography>
               {item.content}
             </Typography>
@@ -66,6 +94,19 @@ const Dashboard = (props) => {
               {item.keywords.map((keyword, index) => (
                 <Chip key={index} label={keyword}/>
               ))}
+            </div>
+          </CardContent>
+          <CardContent className={classes.feedbackRow}>
+            <Typography>
+              Is this correct?
+            </Typography>
+            <div className={classes.feedbackButtonContainer}>
+                <IconButton className={classes.iconButton} onClick={()=>{console.log('here')}}>
+                  <CheckCircleIcon/>
+                </IconButton>
+                <IconButton className={classes.iconButton} onClick={()=>{}}>
+                  <CancelIcon/>
+                </IconButton>
             </div>
           </CardContent>
         </Card>
