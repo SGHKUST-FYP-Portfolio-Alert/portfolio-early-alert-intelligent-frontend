@@ -68,8 +68,8 @@ const Counterparty = (props) => {
   ]
 
   const data = [
-    {'company_id': 'mitsubishi', 'company_name': 'Mitsubishi Co.', 'sentimentHistory': sentimentHistory, 'alertHistory': alertHistory, 'news': news },
-    {'company_id': 'wanda', 'company_name': 'Wanda Group', 'sentimentHistory': sentimentHistory, 'alertHistory': alertHistory, 'news': news },
+    {'company_id': 'mitsubishi', 'company_name': 'Demo Company 1', 'sentimentHistory': sentimentHistory, 'alertHistory': alertHistory, 'news': news },
+    {'company_id': 'wanda', 'company_name': 'Demo Company 2', 'sentimentHistory': sentimentHistory, 'alertHistory': alertHistory, 'news': news },
   ].find(item => item.company_id === companyId)
 
 

@@ -31,8 +31,8 @@ const CounterpartyList = (props) => {
   ]
 
   const data = [
-    {'company_id': 'mitsubishi', 'company_name': 'Mitsubishi Co.' },
-    {'company_id': 'wanda', 'company_name': 'Wanda Group' }
+    {'company_id': 'mitsubishi', 'company_name': 'Demo Company 1' },
+    {'company_id': 'wanda', 'company_name': 'Demo Company 2' }
   ]
 
   return (

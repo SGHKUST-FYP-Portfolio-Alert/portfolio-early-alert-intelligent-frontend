@@ -9,7 +9,8 @@ import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
-
+import MenuIcon from '@material-ui/icons/Menu';
+import { Autorenew } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   companyName: {
@@ -20,10 +21,9 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   card: {
-    width: '70%',
-    margin: 'auto',
-    marginBottom: theme.spacing(3),
-    textAlign: 'left'
+    minWidth: '80%',
+    textAlign: 'left',
+    marginRight: theme.spacing(3)
   },
   cardAlert: {
     backgroundColor: colors.red[400],
@@ -53,7 +53,19 @@ const useStyles = makeStyles((theme) => ({
   Row: {
     display: 'flex',
     justifyContent: 'space-between'
-  }
+  },
+  cardRow: {
+    display: 'flex',
+    margin: 'auto',
+    maxWidth: 800,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.grey[100],
+    marginBottom: theme.spacing(1)
+  },
+  menuIcon: {
+    color: colors.grey[600]
+  },
 }));
 
 const Dashboard = (props) => {
@@ -62,12 +74,13 @@ const Dashboard = (props) => {
   const { history } = props;
 
   const data = [
-    { 'company_id': 'mitsubishi', 'company_name': 'Mitsubishi Co.', 'type': 'alert', 'content': 'Sentiment Score drop to 2.3', 'keywords': ['JPY rises', 'semicondutor price'] },
-    { 'company_id': 'wanda', 'company_name': 'Wanda Group', 'type': 'warning', 'content': "Moody's rating drops from BB+ to BB", 'keywords': ['government', 'fine', 'policy'] }
+    { 'company_id': 'mitsubishi', 'company_name': 'Demo Company 1', 'type': 'alert', 'content': 'Sentiment score drop to 2.3', 'keywords': ['currency', 'price'] },
+    { 'company_id': 'wanda', 'company_name': 'Demo Company 2', 'type': 'warning', 'content': "Possible legal issues", 'keywords': ['legal', 'fine', 'policy'] }
   ]
   return (
     <div className={classes.dashboard}>
       { data.map((item, index) =>
+        <div className={classes.cardRow}>
         <Card
           className={classnames(
             classes.card,
@@ -110,6 +123,8 @@ const Dashboard = (props) => {
             </div>
           </CardContent>
         </Card>
+        <MenuIcon className={classes.menuIcon}/>
+        </div>
       )}
     </div>
   );
