@@ -38,7 +38,11 @@ const CounterpartyList = (props) => {
   return (
     <div className={classes.counterpartyList}>
       <div className={classes.buttonRow}>
-        <Button variant="contained" color="primary" >New</Button>
+        <Button variant="contained" color="primary" 
+          onClick={(event) => history.push("new-counterparty")}
+        >
+          New
+        </Button>
         <Button variant="contained" color="secondary">Delete</Button>
       </div>
       <DataGrid

@@ -10,6 +10,7 @@ import Dashboard from './pages/Dashboard';
 import CounterpartyList from './pages/CounterpartyList';
 import Counterparty from './pages/Counterparty';
 import { ThemeProvider } from '@material-ui/styles';
+import NewCounterparty from './pages/NewCounterparty';
 
 import {
   BrowserRouter,
@@ -75,6 +76,7 @@ function App() {
             <Route exact path="/" render={(props) => <Dashboard/>}/>
             <Route exact path="/counterparty-list" render={(props) => <CounterpartyList/>}/>
             <Route exact path="/counterparty" render={props => <Counterparty/>}/>
+            <Route exact path="/new-counterparty" render={props => <NewCounterparty/>}/>
           </Switch>
         </div>
       </BrowserRouter>
