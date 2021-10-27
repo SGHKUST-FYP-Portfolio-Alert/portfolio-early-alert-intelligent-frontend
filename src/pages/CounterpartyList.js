@@ -2,6 +2,9 @@ import { withRouter } from "react-router-dom"
 import { DataGrid } from '@material-ui/data-grid';
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
+import { serverURL } from '../constants'
+import { useState, useEffect } from "react";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -21,18 +24,24 @@ const CounterpartyList = (props) => {
 
   const classes = useStyles();
   const { history } = props;
+  const [ counterparties, setCounterparties ] = useState([]);
+
+  useEffect(()=>{
+    axios.get(serverURL + 'counterparty/')
+      .then((response)=>{
+        setCounterparties(response.data)
+      })
+      .catch((error)=>{
+        console.log("TODO error catching")
+      })
+  });
 
   const columns = [
     {
-      field: 'company_name',
-      headerName: 'Company Name',
+      field: 'name',
+      headerName: 'Counterparty Name',
       width: 500
     }
-  ]
-
-  const data = [
-    {'company_id': 'mitsubishi', 'company_name': 'Demo Company 1' },
-    {'company_id': 'wanda', 'company_name': 'Demo Company 2' }
   ]
 
   return (
@@ -49,9 +58,9 @@ const CounterpartyList = (props) => {
         autoHeight
         checkboxSelection
         columns={columns}
-        rows={data}
-        getRowId={(row) => row.company_id}
-        onRowClick={({row})=>history.push("/counterparty?id="+row.company_id)}
+        rows={counterparties}
+        getRowId={(row) => row.symbol}
+        onRowClick={({row})=>history.push("/counterparty?id="+row.symbol)}
       />
     </div>
   )

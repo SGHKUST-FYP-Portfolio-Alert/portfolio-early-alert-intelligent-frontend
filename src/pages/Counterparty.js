@@ -10,6 +10,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import classnames from 'classnames'
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { serverURL } from '../constants'
 
 const useStyles = makeStyles((theme) => ({
   counterparty: {
@@ -42,35 +45,38 @@ const Counterparty = (props) => {
   const { history } = props;
 
   const queryParams = new URLSearchParams(document.location.search);
-  const companyId = queryParams.get('id')
+  const counterpartyId = queryParams.get('id')
+
+  const [ data, setData ] = useState({});
+
+  useEffect(()=>{
+    axios.get(serverURL + 'counterparty/' + counterpartyId)
+      .then((response)=>{console.log(response)})
+      .catch((error)=> console.log("TODO error handling", error))
+  });
 
 
-  const sentimentHistory = [
-    {date: '2021-08-01', value: 5.0},
-    {date: '2021-08-02', value: 5.2, keywords: ['key1', 'key2']},
-    {date: '2021-08-03', value: 4.9},
-    {date: '2021-08-04', value: 4.8, keywords: ['key1', 'key2']},
-    {date: '2021-08-05', value: 4.6},
-    {date: '2021-08-06', value: 4.0, keywords: ['key1', 'key2']},
-    {date: '2021-08-07', value: 3.0},
-    {date: '2021-08-08', value: 2.3, keywords: ['key1', 'key2']}
-  ]
+  // const sentimentHistory = [
+  //   {date: '2021-08-01', value: 5.0},
+  //   {date: '2021-08-02', value: 5.2, keywords: ['key1', 'key2']},
+  //   {date: '2021-08-03', value: 4.9},
+  //   {date: '2021-08-04', value: 4.8, keywords: ['key1', 'key2']},
+  //   {date: '2021-08-05', value: 4.6},
+  //   {date: '2021-08-06', value: 4.0, keywords: ['key1', 'key2']},
+  //   {date: '2021-08-07', value: 3.0},
+  //   {date: '2021-08-08', value: 2.3, keywords: ['key1', 'key2']}
+  // ]
 
-  const alertHistory = [
-    {date: '2021-06-01', type:'warning', content: 'warning message detail 1'},
-    {date: '2021-07-01', type: 'alert', content: 'warning message detail 2'},
-    {date: '2021-08-07', type: 'alert', content: 'warning message detail 3'}
-  ]
+  // const alertHistory = [
+  //   {date: '2021-06-01', type:'warning', content: 'warning message detail 1'},
+  //   {date: '2021-07-01', type: 'alert', content: 'warning message detail 2'},
+  //   {date: '2021-08-07', type: 'alert', content: 'warning message detail 3'}
+  // ]
 
-  const news = [
-    {title: 'Hello news', content: 'this is some news content', source: 'Googol News'},
-    {title: 'Bye news', content: 'this is again some news content', source: 'Bloomboom'},
-  ]
-
-  const data = [
-    {'company_id': 'mitsubishi', 'company_name': 'Demo Company 1', 'sentimentHistory': sentimentHistory, 'alertHistory': alertHistory, 'news': news },
-    {'company_id': 'wanda', 'company_name': 'Demo Company 2', 'sentimentHistory': sentimentHistory, 'alertHistory': alertHistory, 'news': news },
-  ].find(item => item.company_id === companyId)
+  // const news = [
+  //   {title: 'Hello news', content: 'this is some news content', source: 'Googol News'},
+  //   {title: 'Bye news', content: 'this is again some news content', source: 'Bloomboom'},
+  // ]
 
 
   const getChart = () => (
@@ -128,8 +134,6 @@ const Counterparty = (props) => {
     </ListItem>
   );
 
-  console.log(data.news.map((newsItem, index) => getNewListItem(newsItem, index)))
-  console.log(data.alertHistory.map((alertItem, index) => getAlertListItem(alertItem, index)))
 
   return (
     <div className={classes.counterparty}>
@@ -143,12 +147,12 @@ const Counterparty = (props) => {
         <Typography className={classes.currentRowItem}>
           Current:
         </Typography>
-        <Chip className={classes.currentRowItem} label={data.sentimentHistory[data.sentimentHistory.length - 1].value} color='secondary'/>
+        <Chip className={classes.currentRowItem} label={data.sentimentHistory?.[data.sentimentHistory.length - 1].value} color='secondary'/>
         <Typography className={classes.currentRowItem}>
           Keywords:
         </Typography>
         <div className={classes.currentRowItem}>
-          {data.sentimentHistory[data.sentimentHistory.length - 1].keywords.map(
+          {data.sentimentHistory?.[data.sentimentHistory.length - 1].keywords.map(
             (keyword, index) => <Chip label={keyword} key={index}/>
           )}
         </div>
@@ -158,13 +162,13 @@ const Counterparty = (props) => {
         News
       </Typography>
       <List>
-        {data.news.map((newsItem, index) => getNewListItem(newsItem, index))}
+        {data?.news?.map((newsItem, index) => getNewListItem(newsItem, index))}
       </List>
       <Typography variant="h6">
         Past Alert
       </Typography>
       <List>
-        {data.alertHistory.map((alertItem, index) => getAlertListItem(alertItem, index))}
+        {data.alertHistory?.map((alertItem, index) => getAlertListItem(alertItem, index))}
       </List>
     </div>
   )
