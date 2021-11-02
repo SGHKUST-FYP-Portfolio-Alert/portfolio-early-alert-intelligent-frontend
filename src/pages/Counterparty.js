@@ -50,10 +50,26 @@ const Counterparty = (props) => {
   const [ data, setData ] = useState({});
 
   useEffect(()=>{
-    axios.get(serverURL + 'counterparty/' + counterpartyId)
-      .then((response)=>{console.log(response)})
+
+    axios.get(serverURL + `news?counterparty=${counterpartyId}&limit=5` )
+      .then((response)=>{
+        setData(prevState =>({
+          ...prevState,
+          news: response.data
+        }))
+      })
       .catch((error)=> console.log("TODO error handling", error))
-  });
+    
+      axios.get(serverURL + `calculation?counterparty=${counterpartyId}`)
+      .then((response)=>{
+        setData(prevState =>({
+          ...prevState,
+          sentimentHistory: response.data
+        }))
+      })
+      .catch((error)=> console.log("TODO error handling", error))
+
+  }, []);
 
 
   // const sentimentHistory = [
@@ -88,14 +104,14 @@ const Counterparty = (props) => {
       <XAxis dataKey="date" />
       <YAxis />
       <Tooltip />
-      <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
+      <Line type="monotone" dataKey="average_score" stroke="#8884d8" activeDot={{ r: 8 }} />
     </LineChart>
   );
 
   const getNewListItem = (newsItem, index) => (
     <ListItem button onClick={()=>{}} key={index}>
       <ListItemText
-        primary={newsItem.title}
+        primary={newsItem.headline}
         secondary={
           <React.Fragment>
             <Typography
@@ -106,7 +122,7 @@ const Counterparty = (props) => {
             >
               {newsItem.source} &emsp;-&emsp;
             </Typography>
-            {newsItem.content}
+            {newsItem.summary}
           </React.Fragment>
         }
       />
@@ -147,12 +163,12 @@ const Counterparty = (props) => {
         <Typography className={classes.currentRowItem}>
           Current:
         </Typography>
-        <Chip className={classes.currentRowItem} label={data.sentimentHistory?.[data.sentimentHistory.length - 1].value} color='secondary'/>
+        <Chip className={classes.currentRowItem} label={data.sentimentHistory?.[data.sentimentHistory.length - 1]?.average_score.toFixed(2)} color='secondary'/>
         <Typography className={classes.currentRowItem}>
           Keywords:
         </Typography>
         <div className={classes.currentRowItem}>
-          {data.sentimentHistory?.[data.sentimentHistory.length - 1].keywords.map(
+          {data.sentimentHistory?.[data.sentimentHistory.length - 1]?.keywords?.map(
             (keyword, index) => <Chip label={keyword} key={index}/>
           )}
         </div>
