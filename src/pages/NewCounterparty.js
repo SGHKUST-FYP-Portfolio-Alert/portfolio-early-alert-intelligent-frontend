@@ -59,7 +59,7 @@ const NewCounterparty = (props) => {
         Counterparty Contents Placeholder
       </div>
       <div className={classes.buttonRow}>
-        <Button variant="contained" color="secondary" >Cancel</Button>
+        <Button variant="contained" color="secondary" onClick={(event) => history.push("counterparty-list")}>Cancel</Button>
         <Button variant="contained" color="primary">Add</Button>
       </div>
     </div>
