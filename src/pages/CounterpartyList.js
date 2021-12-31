@@ -27,7 +27,7 @@ const CounterpartyList = (props) => {
   const [ counterparties, setCounterparties ] = useState([]);
 
   useEffect(()=>{
-    axios.get(serverURL + 'counterparty/')
+    axios.get(serverURL + 'counterparty')
       .then((response)=>{
         setCounterparties(response.data)
       })
