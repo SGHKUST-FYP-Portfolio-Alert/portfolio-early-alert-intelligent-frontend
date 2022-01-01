@@ -60,7 +60,7 @@ const Counterparty = (props) => {
       })
       .catch((error)=> console.log("TODO error handling", error))
     
-      axios.get(serverURL + `calculation?counterparty=${counterpartyId}`)
+      axios.get(serverURL + `calculation/chart?counterparty=${counterpartyId}`)
       .then((response)=>{
         setData(prevState =>({
           ...prevState,
@@ -105,6 +105,7 @@ const Counterparty = (props) => {
       <YAxis />
       <Tooltip />
       <Line type="monotone" dataKey="average_score" stroke="#8884d8" activeDot={{ r: 8 }} />
+      <Line type="monotone" dataKey="closing_stock_price" stroke="#ff0000" activeDot={{ r: 8 }} />
     </LineChart>
   );
 
@@ -163,7 +164,7 @@ const Counterparty = (props) => {
         <Typography className={classes.currentRowItem}>
           Current:
         </Typography>
-        <Chip className={classes.currentRowItem} label={data.sentimentHistory?.[data.sentimentHistory.length - 1]?.average_score.toFixed(2)} color='secondary'/>
+        {/* <Chip className={classes.currentRowItem} label={data.sentimentHistory?.[data.sentimentHistory.length - 1]?.average_score.toFixed(2)} color='secondary'/> */}
         <Typography className={classes.currentRowItem}>
           Keywords:
         </Typography>
