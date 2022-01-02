@@ -104,8 +104,8 @@ const Counterparty = (props) => {
       <XAxis dataKey="date" />
       <YAxis />
       <Tooltip />
-      <Line type="monotone" dataKey="average_score" stroke="#8884d8" activeDot={{ r: 8 }} />
-      <Line type="monotone" dataKey="closing_stock_price" stroke="#ff0000" activeDot={{ r: 8 }} />
+      <Line type="monotone" dataKey="average_score" stroke="#8884d8" connectNulls activeDot={{ r: 8 }} />
+      <Line type="monotone" dataKey="closing_stock_price" stroke="#ff0000" connectNulls activeDot={{ r: 8 }} />
     </LineChart>
   );
 
