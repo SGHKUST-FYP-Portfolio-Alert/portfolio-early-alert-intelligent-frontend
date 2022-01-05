@@ -58,11 +58,12 @@ const NewCounterparty = (props) => {
   const classes = useStyles();
   const { history } = props;
   const [ options, setOptions ] = useState([]);
+  const [ selectedCounterparties, setSelectedCounterparties ] = useState([]);
 
   function search(query){
     axios.get(serverURL+`counterparty/search?query=${query}`)
       .then((response)=>{
-        setOptions(response.data.result)
+        setOptions(selectedCounterparties.concat(response.data.result))
       })
       .catch((error)=>{
         console.log("TODO error catching")
@@ -72,6 +73,25 @@ const NewCounterparty = (props) => {
 
   function handleInputChange(evt, value){
     if (value) search(value);
+  }
+
+  function handleSelect(evt, value){
+    setSelectedCounterparties(value)
+  }
+
+  function handleAddCounterparties(){
+
+    const promises = selectedCounterparties.map(
+      counterparty => 
+        axios.post(serverURL+ 'counterparty', {
+          name: counterparty.description, symbol: counterparty.symbol
+        })
+    )
+
+    Promise.all(promises)
+      .then(function(){ history.push("counterparty-list")})
+      .catch(function(err){ console.log(err) })
+
   }
 
   function renderInput(params){
@@ -101,22 +121,22 @@ const NewCounterparty = (props) => {
     <div className={classes.page}>
       <Typography variant="h5">New Counterparty</Typography>
       <Autocomplete
+        multiple
         style={{ width: 400 }}
         options={options}
         getOptionLabel={(option) => option.symbol}
-        onChange={()=>{console.log('change')}}
+        onChange={handleSelect}
         onInputChange={debounce(handleInputChange, 500)}
         filterOptions={x=>x}
         renderOption={renderOption}
         renderInput={renderInput}
+        getOptionSelected={(option, value) => option.symbol === value.symbol}
+        filterSelectedOptions
         className={classes.autocomplete}
       />
-      <div className={classes.placeholder}>
-        Counterparty Contents Placeholder
-      </div>
       <div className={classes.buttonRow}>
         <Button variant="contained" color="secondary" onClick={(event) => history.push("counterparty-list")}>Cancel</Button>
-        <Button variant="contained" color="primary">Add</Button>
+        <Button variant="contained" color="primary" onClick={handleAddCounterparties}>Add</Button>
       </div>
     </div>
   )
