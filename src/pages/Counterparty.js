@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { withRouter } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { Slider } from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -13,6 +14,8 @@ import classnames from 'classnames'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { serverURL } from '../constants'
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 const useStyles = makeStyles((theme) => ({
   counterparty: {
@@ -39,6 +42,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const today = Date.now();
+
+const chartStartOption = {
+  _1M: today - 30*24*60*60*1000,
+  _3M: today - 90*24*60*60*1000,
+  _6M: today - 180*24*60*60*1000,
+  _1Y: today - 365*24*60*60*1000,
+  _3Y: today - 1095*24*60*60*1000
+}
+
+// A reverse dictionary to chartStartOption
+const chartStartOptionReverse = Object.fromEntries(Object.entries(chartStartOption).map(a => a.reverse()))
+
+function timestampToString(timestamp){
+  var date = new Date(timestamp);
+  return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
+}
+
+function timestampToMonthString(timestamp){
+  var date = new Date(timestamp);
+  return `${date.getFullYear()}-${date.getMonth()+1}`
+}
+
 const Counterparty = (props) => {
 
   const classes = useStyles();
@@ -60,53 +86,52 @@ const Counterparty = (props) => {
       })
       .catch((error)=> console.log("TODO error handling", error))
     
-      axios.get(serverURL + `calculation?counterparty=${counterpartyId}`)
+      axios.get(serverURL + `calculation/chart?counterparty=${counterpartyId}`)
       .then((response)=>{
+        let chartData = response.data.map( 
+          (data) => ({ timestamp: Date.parse(data.date), ...data})
+        ).filter(data=> data.timestamp >= chartStartOption._3Y) //filter too old data to prevent charts become too big
         setData(prevState =>({
           ...prevState,
-          sentimentHistory: response.data
+          chartData: chartData
         }))
       })
       .catch((error)=> console.log("TODO error handling", error))
 
   }, []);
 
+  const Chart = () => {
 
-  // const sentimentHistory = [
-  //   {date: '2021-08-01', value: 5.0},
-  //   {date: '2021-08-02', value: 5.2, keywords: ['key1', 'key2']},
-  //   {date: '2021-08-03', value: 4.9},
-  //   {date: '2021-08-04', value: 4.8, keywords: ['key1', 'key2']},
-  //   {date: '2021-08-05', value: 4.6},
-  //   {date: '2021-08-06', value: 4.0, keywords: ['key1', 'key2']},
-  //   {date: '2021-08-07', value: 3.0},
-  //   {date: '2021-08-08', value: 2.3, keywords: ['key1', 'key2']}
-  // ]
+    const [ chartStart, setChartStart ] = useState(chartStartOption['_6M']); // default range: half year
 
-  // const alertHistory = [
-  //   {date: '2021-06-01', type:'warning', content: 'warning message detail 1'},
-  //   {date: '2021-07-01', type: 'alert', content: 'warning message detail 2'},
-  //   {date: '2021-08-07', type: 'alert', content: 'warning message detail 3'}
-  // ]
-
-  // const news = [
-  //   {title: 'Hello news', content: 'this is some news content', source: 'Googol News'},
-  //   {title: 'Bye news', content: 'this is again some news content', source: 'Bloomboom'},
-  // ]
-
-
-  const getChart = () => (
-    <LineChart
-      data={data.sentimentHistory}
-      height={300}
-      width={800}
-    >
-      <XAxis dataKey="date" />
-      <YAxis />
-      <Tooltip />
-      <Line type="monotone" dataKey="average_score" stroke="#8884d8" activeDot={{ r: 8 }} />
-    </LineChart>
-  );
+    return (
+      <>
+      <LineChart
+        data={data.chartData}
+        height={300}
+        width={800}
+      >
+        <XAxis type="number" dataKey="timestamp" tickFormatter={timestampToString} domain={[chartStart, today]} allowDataOverflow/>
+        <YAxis />
+        <Tooltip labelFormatter={timestampToString}/>
+        <Line type="monotone" dataKey="average_score" stroke="#8884d8" connectNulls />
+        <Line type="monotone" dataKey="closing_stock_price" stroke="#ff0000" connectNulls />
+      </LineChart>
+      <ToggleButtonGroup
+        color="primary"
+        value={chartStartOptionReverse[chartStart]}
+        exclusive
+        onChange={function(evt, value){setChartStart(chartStartOption[value])}}
+      >
+        <ToggleButton value="_1M">1M</ToggleButton>
+        <ToggleButton value="_3M">3M</ToggleButton>
+        <ToggleButton value="_6M">6M</ToggleButton>
+        <ToggleButton value="_1Y">1Y</ToggleButton>
+        <ToggleButton value="_3Y">3Y</ToggleButton>
+      </ToggleButtonGroup>
+      </>
+    )
+  };
 
   const getNewListItem = (newsItem, index) => (
     <ListItem button onClick={()=>{}} key={index}>
@@ -163,7 +188,7 @@ const Counterparty = (props) => {
         <Typography className={classes.currentRowItem}>
           Current:
         </Typography>
-        <Chip className={classes.currentRowItem} label={data.sentimentHistory?.[data.sentimentHistory.length - 1]?.average_score.toFixed(2)} color='secondary'/>
+        {/* <Chip className={classes.currentRowItem} label={data.sentimentHistory?.[data.sentimentHistory.length - 1]?.average_score.toFixed(2)} color='secondary'/> */}
         <Typography className={classes.currentRowItem}>
           Keywords:
         </Typography>
@@ -173,7 +198,7 @@ const Counterparty = (props) => {
           )}
         </div>
       </div>
-      {getChart()}
+      { data.chartData && <Chart/> }
       <Typography variant="h6">
         News
       </Typography>
