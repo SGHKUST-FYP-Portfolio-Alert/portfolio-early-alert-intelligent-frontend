@@ -16,6 +16,7 @@ import axios from 'axios';
 import { serverURL } from '../constants'
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import Chart from '../components/Chart';
 
 const useStyles = makeStyles((theme) => ({
   counterparty: {
@@ -42,29 +43,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const today = Date.now();
-
-const chartStartOption = {
-  _1M: today - 30*24*60*60*1000,
-  _3M: today - 90*24*60*60*1000,
-  _6M: today - 180*24*60*60*1000,
-  _1Y: today - 365*24*60*60*1000,
-  _3Y: today - 1095*24*60*60*1000
-}
-
-// A reverse dictionary to chartStartOption
-const chartStartOptionReverse = Object.fromEntries(Object.entries(chartStartOption).map(a => a.reverse()))
-
-function timestampToString(timestamp){
-  var date = new Date(timestamp);
-  return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
-}
-
-function timestampToMonthString(timestamp){
-  var date = new Date(timestamp);
-  return `${date.getFullYear()}-${date.getMonth()+1}`
-}
-
 const Counterparty = (props) => {
 
   const classes = useStyles();
@@ -88,50 +66,14 @@ const Counterparty = (props) => {
     
       axios.get(serverURL + `calculation/chart?counterparty=${counterpartyId}`)
       .then((response)=>{
-        let chartData = response.data.map( 
-          (data) => ({ timestamp: Date.parse(data.date), ...data})
-        ).filter(data=> data.timestamp >= chartStartOption._3Y) //filter too old data to prevent charts become too big
         setData(prevState =>({
           ...prevState,
-          chartData: chartData
+          chartData: response.data
         }))
       })
       .catch((error)=> console.log("TODO error handling", error))
 
   }, []);
-
-  const Chart = () => {
-
-    const [ chartStart, setChartStart ] = useState(chartStartOption['_6M']); // default range: half year
-
-    return (
-      <>
-      <LineChart
-        data={data.chartData}
-        height={300}
-        width={800}
-      >
-        <XAxis type="number" dataKey="timestamp" tickFormatter={timestampToString} domain={[chartStart, today]} allowDataOverflow/>
-        <YAxis />
-        <Tooltip labelFormatter={timestampToString}/>
-        <Line type="monotone" dataKey="average_score" stroke="#8884d8" connectNulls />
-        <Line type="monotone" dataKey="closing_stock_price" stroke="#ff0000" connectNulls />
-      </LineChart>
-      <ToggleButtonGroup
-        color="primary"
-        value={chartStartOptionReverse[chartStart]}
-        exclusive
-        onChange={function(evt, value){setChartStart(chartStartOption[value])}}
-      >
-        <ToggleButton value="_1M">1M</ToggleButton>
-        <ToggleButton value="_3M">3M</ToggleButton>
-        <ToggleButton value="_6M">6M</ToggleButton>
-        <ToggleButton value="_1Y">1Y</ToggleButton>
-        <ToggleButton value="_3Y">3Y</ToggleButton>
-      </ToggleButtonGroup>
-      </>
-    )
-  };
 
   const getNewListItem = (newsItem, index) => (
     <ListItem button onClick={()=>{}} key={index}>
@@ -198,7 +140,7 @@ const Counterparty = (props) => {
           )}
         </div>
       </div>
-      { data.chartData && <Chart/> }
+      { data.chartData && <Chart data={data.chartData}/> }
       <Typography variant="h6">
         News
       </Typography>
