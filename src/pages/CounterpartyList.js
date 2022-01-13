@@ -25,18 +25,33 @@ const CounterpartyList = (props) => {
   const classes = useStyles();
   const { history } = props;
   const [ counterparties, setCounterparties ] = useState([]);
+  const [ selectedCounterparties, setSelectedCounterparties ] = useState([]);
+
+  function handleDeleteCounterparties(){
+    const promises = selectedCounterparties.map(
+      counterparty => axios.delete(serverURL+'counterparty?symbol='+counterparty)
+    )
+
+    Promise.all(promises)
+      .then(history.go())
+  }
 
   useEffect(()=>{
-    axios.get(serverURL + 'counterparty/')
+    axios.get(serverURL + 'counterparty')
       .then((response)=>{
         setCounterparties(response.data)
       })
       .catch((error)=>{
         console.log("TODO error catching")
       })
-  });
+  }, []);
 
   const columns = [
+    {
+      field: 'symbol',
+      headerName: 'Symbol',
+      width: 130
+    },
     {
       field: 'name',
       headerName: 'Counterparty Name',
@@ -52,7 +67,11 @@ const CounterpartyList = (props) => {
         >
           New
         </Button>
-        <Button variant="contained" color="secondary">Delete</Button>
+        <Button variant="contained" color="secondary" 
+          onClick={handleDeleteCounterparties}
+        >
+          Delete
+        </Button>
       </div>
       <DataGrid
         autoHeight
@@ -61,6 +80,7 @@ const CounterpartyList = (props) => {
         rows={counterparties}
         getRowId={(row) => row.symbol}
         onRowClick={({row})=>history.push("/counterparty?id="+row.symbol)}
+        onSelectionModelChange={(val)=>setSelectedCounterparties(val)}
       />
     </div>
   )
