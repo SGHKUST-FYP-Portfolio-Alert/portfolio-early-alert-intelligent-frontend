@@ -61,7 +61,7 @@ const Counterparty = (props) => {
     axios.get(serverURL + `chart/calculation?counterparty=${counterpartyId}`)
       .then((response)=>{
         setData(prevState =>({...prevState, calculation: response.data}))
-        setChartData(prevState => ({...prevState, calcualtion: parseCalculationData(response.data)}))
+        setChartData(prevState => ({...prevState, calculation: parseCalculationData(response.data)}))
       })
       .catch((error)=> console.log("TODO error handling", error))
 
@@ -139,7 +139,7 @@ const Counterparty = (props) => {
           )}
         </div>
       </div>
-      <Chart chartData={chartData}/>
+      {(chartData.price && chartData.calculation) && <Chart chartData={chartData}/>}
       <Typography variant="h6">
         News
       </Typography>

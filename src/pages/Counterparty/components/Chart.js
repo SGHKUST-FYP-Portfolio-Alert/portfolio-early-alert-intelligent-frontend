@@ -1,13 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 import { chartOptions } from './chartConfig';
 import { Button, Popover } from '@material-ui/core';
 import { FormGroup, FormControlLabel, Checkbox } from '@material-ui/core';
 
+var hcSeries;
+
 const SelectPopover = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const {display, setDisplay} = props;
+  const { series } = props
+  const [checked, setChecked] = useState([])
+
+  useEffect(()=>{
+    setChecked(series.map(_ => true))
+  }, [series])
 
   function handleClick(evt){
     setAnchorEl(evt.currentTarget);
@@ -17,15 +24,16 @@ const SelectPopover = (props) => {
   };
 
   function handleChange(evt){
-    setDisplay({
-      ...display,
-      [evt.target.name]: evt.target.checked,
-    })
+    let idx = parseInt(evt.target.name)
+    let newChecked = [...checked];
+    newChecked[idx] = evt.target.checked;
+    setChecked(newChecked);
+    hcSeries[idx].setVisible(evt.target.checked);
   }
 
   return (
     <>
-    <Button onClick={handleClick}>Display/ Hide Data</Button>
+    <Button variant="outlined" onClick={handleClick}>Display/ Hide Data</Button>
     <Popover
       open={Boolean(anchorEl)}
       anchorEl={anchorEl}
@@ -36,11 +44,11 @@ const SelectPopover = (props) => {
       }}
     >
       <FormGroup>{
-        Object.keys(display).map((group)=>
+        series.map((s, idx)=>
           <FormControlLabel
-            key={group}
-            control={<Checkbox checked={display[group]} onClick={handleChange} name={group}/>}
-            label={group}
+            key={idx}
+            control={<Checkbox checked={checked[idx]} onClick={handleChange} name={String(idx)}/>}
+            label={s.name}
           />
         )
       }</FormGroup>
@@ -52,30 +60,27 @@ const SelectPopover = (props) => {
 const Chart = (props) => {
 
   const chartData = props.chartData;
-  const [display, setDisplay] = useState({
-    news_count: true, sentiments: true, keyword: true, Close: true
-  });
 
   let series = [];
 
   for (const type in chartData)
     series = series.concat(
       chartData[type].map(({key, group, ...rest}) => ({
-        ...rest, visible: display[group || key]
+        ...rest
       }))
     );
 
   const options = {
     series,
-    ...chartOptions
+    chart: { events: { load: function(){ hcSeries = this.series}}},
+    ...chartOptions,
+
   };
 
-  if (options.series.length == 0) return null;
   return (
     <>
     <SelectPopover
-      display={display}
-      setDisplay={setDisplay}
+      series={series}
     />
     <HighchartsReact
       highcharts={Highcharts}
