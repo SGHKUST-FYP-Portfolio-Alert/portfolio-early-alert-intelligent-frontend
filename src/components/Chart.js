@@ -4,39 +4,63 @@ import HighchartsReact from 'highcharts-react-official';
 
 const Chart = (props) => {
 
-  const data = props.data.map(
-    obj => ({datetime: Date.parse(obj.date), ...obj})
-  );
+  const data = props.data;
+  let series = []
 
-  const keywords = [... new Set(data.flatMap(
-    obj => obj?.keyword_count? Object.keys(obj.keyword_count): undefined
-  ))];
+  if (data.calculation){
+    
+    const calculationData = data.calculation.map(
+      obj => ({datetime: Date.parse(obj.date), ...obj})
+    );
 
-  const series = [
-    { 
-      name: 'News Count', 
-      data: data.map(obj => [obj.datetime, obj.news_count])
-    },
-    { 
-      name: 'Sentiments - Positive', 
-      data: data.map(obj => [obj.datetime, obj?.sentiments['1'] || 0])
-    },
-    { 
-      name: 'Sentiments - Neutral', 
-      data: data.map(obj => [obj.datetime, obj?.sentiments['0'] || 0])
-    },
-    { 
-      name: 'Sentiments - Negative', 
-      data: data.map(obj => [obj.datetime, obj?.sentiments['-1'] || 0])
-    },
-    ...keywords.flatMap(keyword => ({
-      name: 'Keywords - ' + keyword,
-      data: data.map(obj => [obj.datetime, obj?.keyword_count?.[keyword]]),
-      yAxis: 1,
-      type: 'column'
-    }))
-  ];
+    const keywords = [... new Set(calculationData?.flatMap(
+      obj => obj?.keyword_count? Object.keys(obj.keyword_count): undefined
+    ))];
 
+    const calculationSeries = [
+      { 
+        name: 'News Count', 
+        data: calculationData?.map(obj => [obj.datetime, obj.news_count])
+      },
+      { 
+        name: 'Sentiments - Positive', 
+        data: calculationData?.map(obj => [obj.datetime, obj?.sentiments['1'] || 0])
+      },
+      { 
+        name: 'Sentiments - Neutral', 
+        data: calculationData?.map(obj => [obj.datetime, obj?.sentiments['0'] || 0])
+      },
+      { 
+        name: 'Sentiments - Negative', 
+        data: calculationData?.map(obj => [obj.datetime, obj?.sentiments['-1'] || 0])
+      },
+      ...keywords?.flatMap(keyword => ({
+        name: 'Keywords - ' + keyword,
+        data: calculationData?.map(obj => [obj.datetime, obj?.keyword_count?.[keyword]]),
+        yAxis: 1,
+        type: 'column'
+      }))
+    ];
+
+    series = series.concat(calculationSeries)
+
+  };
+
+  if (data.price){
+    console.log('run2.1')
+    if (!(data.price)) return;
+    console.log('run2.2')
+    const priceData = data.price.map(
+      obj => ({datetime: Date.parse(obj.date), ...obj})
+    );
+    const priceSeries = {
+      name: 'Price',
+      data: priceData.map(obj => [obj.datetime, obj.Close])
+    }
+    series = series.concat(priceSeries)
+  };
+
+  
   const options = {
     series: series,
     rangeSelector: {
@@ -56,26 +80,14 @@ const Chart = (props) => {
       minTickInterval: 24 * 60 * 60 * 1000
     },
     yAxis: [{
-      labels: {
-          align: 'right',
-          x: -3
-      },
-      title: {
-          text: ''
-      },
+      labels: {align: 'right', x: -3},
+      title: { text: ''},
       height: '60%',
       lineWidth: 2,
-      resize: {
-          enabled: true
-      }
+      resize: {enabled: true}
     }, {
-      labels: {
-          align: 'right',
-          x: -3
-      },
-      title: {
-          text: 'Keywords'
-      },
+      labels: {align: 'right', x: -3},
+      title: {text: 'Keywords'},
       top: '65%',
       height: '35%',
       offset: 0,
@@ -87,13 +99,13 @@ const Chart = (props) => {
         stacking: 'normal',
       },
       series: {
-          //stacking: 'percent',
-          pointRange:24 * 60 * 60 * 1000,
+          pointRange: 24 * 60 * 60 * 1000,
           showInNavigator: true
       }
     },
   }
 
+  if (options.series.length == 0) return null;
   return (
     <HighchartsReact
       highcharts={Highcharts}
