@@ -64,11 +64,20 @@ const Counterparty = (props) => {
       })
       .catch((error)=> console.log("TODO error handling", error))
     
-      axios.get(serverURL + `calculation/chart?counterparty=${counterpartyId}`)
+      axios.get(serverURL + `chart/calculation?counterparty=${counterpartyId}`)
       .then((response)=>{
         setData(prevState =>({
           ...prevState,
-          chartData: response.data
+          calculation: response.data
+        }))
+      })
+      .catch((error)=> console.log("TODO error handling", error))
+
+      axios.get(serverURL + `chart/price?counterparty=${counterpartyId}`)
+      .then((response)=>{
+        setData(prevState =>({
+          ...prevState,
+          price: response.data
         }))
       })
       .catch((error)=> console.log("TODO error handling", error))
@@ -140,7 +149,7 @@ const Counterparty = (props) => {
           )}
         </div>
       </div>
-      { data.chartData && <Chart data={data.chartData}/> }
+      <Chart data={data}/>
       <Typography variant="h6">
         News
       </Typography>
