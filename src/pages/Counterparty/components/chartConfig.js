@@ -8,17 +8,20 @@ export const calculationDataConfig = [
   {
     name: 'Sentiments - Positive',
     key: 'sentiments.1',
-    defaultValue: 0
+    defaultValue: 0,
+    group: 'sentiments'
   },
   {
     name: 'Sentiments - Neutral',
     key: 'sentiments.0',
-    defaultValue: 0
+    defaultValue: 0,
+    group: 'sentiments'
   },
   {
     name: 'Sentiments - Negative',
     key: 'sentiments.-1',
-    defaultValue: 0
+    defaultValue: 0,
+    group: 'sentiments'
   },
   ...keywords.map(keyword => ({
     name: 'Keyword - ' + keyword,
@@ -47,7 +50,6 @@ export const chartOptions = {
       {type: 'year', count: 3, text: '3Y'},
       {type: 'all', text: 'All'}
     ],
-    selected: 0
   },
   xAxis: {
     type: 'datetime',
@@ -76,5 +78,14 @@ export const chartOptions = {
         pointRange: 24 * 60 * 60 * 1000,
         showInNavigator: true
     }
+  },
+  chart: {
+    reflow: false,
+    events: {
+        redraw: function() {
+            console.log("highcharts redraw, rendering-done");
+        }
+    },
+    animation: false
   },
 }

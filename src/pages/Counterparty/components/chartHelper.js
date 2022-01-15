@@ -11,6 +11,7 @@ function parseData(input, config){
     ).filter(([_, value]) => value);
     return {
       data,
+      key,
       ...rest
     };
   });
