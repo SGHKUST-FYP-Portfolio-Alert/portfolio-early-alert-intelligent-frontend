@@ -4,36 +4,38 @@ import HighchartsReact from 'highcharts-react-official';
 
 const Chart = (props) => {
 
-  const dataKeys = [
-    { key: 'closing_stock_price', name: 'Price'},
-    { key: 'average_score', name: 'Sentiment'},
-    //{ key: 'keyword_count', name: 'Keyword' }
-  ]
+  const data = props.data.map(
+    obj => ({datetime: Date.parse(obj.date), ...obj})
+  );
 
-  
-  function parseDataToSeries(data){
-    // input: [{date, data1, data2}, ...]
-    // output: {[[datetime, data1], ...], [[datetime, data2], ...]}
-    let result = [];
-    let keysToIdx = {};
+  const keywords = [... new Set(data.flatMap(
+    obj => obj?.keyword_count? Object.keys(obj.keyword_count): undefined
+  ))];
 
-    dataKeys.forEach(function({key, name}){
-      keysToIdx[key] = result.length;
-      result.push({name: name, data: []});
-    })
-
-    data.forEach(function (obj){
-      const datetime = Date.parse(obj.date);
-      dataKeys.forEach(function({key}){
-        if (obj[key])
-          result[keysToIdx[key]].data.push([datetime, obj[key]]);
-      });
-    });
-
-    return result;
-  }
-
-  const series = parseDataToSeries(props.data)
+  const series = [
+    { 
+      name: 'News Count', 
+      data: data.map(obj => [obj.datetime, obj.news_count])
+    },
+    { 
+      name: 'Sentiments - Positive', 
+      data: data.map(obj => [obj.datetime, obj?.sentiments['1'] || 0])
+    },
+    { 
+      name: 'Sentiments - Neutral', 
+      data: data.map(obj => [obj.datetime, obj?.sentiments['0'] || 0])
+    },
+    { 
+      name: 'Sentiments - Negative', 
+      data: data.map(obj => [obj.datetime, obj?.sentiments['-1'] || 0])
+    },
+    ...keywords.flatMap(keyword => ({
+      name: 'Keywords - ' + keyword,
+      data: data.map(obj => [obj.datetime, obj?.keyword_count?.[keyword]]),
+      yAxis: 1,
+      type: 'column'
+    }))
+  ];
 
   const options = {
     series: series,
@@ -47,16 +49,51 @@ const Chart = (props) => {
         {type: 'year', count: 3, text: '3Y'},
         {type: 'all', text: 'All'}
       ],
-      selected: 4
+      selected: 0
     },
+    xAxis: {
+      type: 'datetime',
+      minTickInterval: 24 * 60 * 60 * 1000
+    },
+    yAxis: [{
+      labels: {
+          align: 'right',
+          x: -3
+      },
+      title: {
+          text: ''
+      },
+      height: '60%',
+      lineWidth: 2,
+      resize: {
+          enabled: true
+      }
+    }, {
+      labels: {
+          align: 'right',
+          x: -3
+      },
+      title: {
+          text: 'Keywords'
+      },
+      top: '65%',
+      height: '35%',
+      offset: 0,
+      lineWidth: 2
+    }],
     plotOptions: {
+      column: {
+        pointRange:24 * 60 * 60 * 1000,
+        stacking: 'normal',
+      },
       series: {
-          compare: 'percent',
+          //stacking: 'percent',
+          pointRange:24 * 60 * 60 * 1000,
           showInNavigator: true
       }
     },
   }
-  
+
   return (
     <HighchartsReact
       highcharts={Highcharts}
