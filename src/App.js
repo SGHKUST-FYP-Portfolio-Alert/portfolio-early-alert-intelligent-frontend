@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Sidebar from './components/Sidebar'
 import Dashboard from './pages/Dashboard';
 import CounterpartyList from './pages/CounterpartyList';
-import Counterparty from './pages/Counterparty';
+import Counterparty from './pages/Counterparty/Counterparty';
 import { ThemeProvider } from '@material-ui/styles';
 import NewCounterparty from './pages/NewCounterparty';
 

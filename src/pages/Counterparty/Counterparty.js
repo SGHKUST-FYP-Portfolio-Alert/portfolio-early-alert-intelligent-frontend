@@ -3,20 +3,16 @@ import { colors } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { withRouter } from 'react-router-dom';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { Slider } from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
-import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import classnames from 'classnames'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { serverURL } from '../constants'
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import Chart from '../components/Chart';
+import { serverURL } from '../../constants'
+import Chart from './components/Chart';
+import { parseCalculationData, parsePriceData } from './components/chartHelper';
 
 const useStyles = makeStyles((theme) => ({
   counterparty: {
@@ -52,33 +48,27 @@ const Counterparty = (props) => {
   const counterpartyId = queryParams.get('id')
 
   const [ data, setData ] = useState({});
+  const [ chartData, setChartData ] = useState({});
 
   useEffect(()=>{
 
     axios.get(serverURL + `news?counterparty=${counterpartyId}&limit=5` )
       .then((response)=>{
-        setData(prevState =>({
-          ...prevState,
-          news: response.data
-        }))
+        setData(prevState =>({...prevState, news: response.data}))
       })
       .catch((error)=> console.log("TODO error handling", error))
     
-      axios.get(serverURL + `chart/calculation?counterparty=${counterpartyId}`)
+    axios.get(serverURL + `chart/calculation?counterparty=${counterpartyId}`)
       .then((response)=>{
-        setData(prevState =>({
-          ...prevState,
-          calculation: response.data
-        }))
+        setData(prevState =>({...prevState, calculation: response.data}))
+        setChartData(prevState => ({...prevState, calculation: parseCalculationData(response.data)}))
       })
       .catch((error)=> console.log("TODO error handling", error))
 
-      axios.get(serverURL + `chart/price?counterparty=${counterpartyId}`)
+    axios.get(serverURL + `chart/price?counterparty=${counterpartyId}`)
       .then((response)=>{
-        setData(prevState =>({
-          ...prevState,
-          price: response.data
-        }))
+        setData(prevState =>({...prevState, price: response.data}));
+        setChartData(prevState => ({...prevState, price: parsePriceData(response.data)}))
       })
       .catch((error)=> console.log("TODO error handling", error))
 
@@ -149,7 +139,7 @@ const Counterparty = (props) => {
           )}
         </div>
       </div>
-      <Chart data={data}/>
+      {(chartData.price && chartData.calculation) && <Chart chartData={chartData}/>}
       <Typography variant="h6">
         News
       </Typography>
