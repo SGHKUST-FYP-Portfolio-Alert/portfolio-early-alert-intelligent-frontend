@@ -3,39 +3,55 @@ export const keywords = ["Ownership change", "Change of control", "Acceleration"
 export const calculationDataConfig = [
   {
     name: 'News Count',
-    key: 'news_count'
+    key: 'news_count',
+    zIndex: 1,
+    color: '#000000',
+    yAxis: 1
   },
   {
     name: 'Sentiments - Positive',
     key: 'sentiments.1',
     defaultValue: 0,
-    group: 'sentiments'
+    group: 'sentiments',
+    stacking: 'percent',
+    color: '#66ff66',
+    type: 'area',
+    yAxis: 2
   },
   {
     name: 'Sentiments - Neutral',
     key: 'sentiments.0',
     defaultValue: 0,
-    group: 'sentiments'
+    group: 'sentiments',
+    stacking: 'percent',
+    color: '#bbbbbb',
+    type: 'area',
+    yAxis: 2
   },
   {
     name: 'Sentiments - Negative',
     key: 'sentiments.-1',
     defaultValue: 0,
-    group: 'sentiments'
+    group: 'sentiments',
+    stacking: 'percent',
+    type: 'area',
+    color: '#ff6666' ,
+    yAxis: 2
   },
   ...keywords.map(keyword => ({
     name: 'Keyword - ' + keyword,
     key: 'keyword_count.'+ keyword,
     type: 'column',
     group: 'keyword',  
-    yAxis: 1
+    yAxis: 3
   }))
 ];
 
 export const priceDataConfig = [
   {
     name: 'Price',
-    key: 'Close'
+    key: 'Close',
+    compare: 'percent'
   }
 ]
 
@@ -57,16 +73,33 @@ export const chartOptions = {
     minTickInterval: 24 * 60 * 60 * 1000
   },
   yAxis: [{
+    title: { text: 'Stock Price'},
     labels: {align: 'right', x: -3},
-    title: { text: ''},
-    height: '60%',
+    height: '25%',
+    lineWidth: 2,
+    resize: {enabled: true}
+  },{
+    labels: {align: 'left', x: 3},
+    title: { text: 'News Count'},
+    opposite: false,
+    top: '30%', 
+    height: '40%',
     lineWidth: 2,
     resize: {enabled: true}
   }, {
+    title: { text: 'Sentiment %'},
+    labels: {align: 'right', x: -3},
+    top: '30%',
+    height: '40%',
+    lineWidth: 2,
+    offset: 0,
+    resize: {enabled: true}
+  },
+  {
     labels: {align: 'right', x: -3},
     title: {text: 'Keywords'},
-    top: '65%',
-    height: '35%',
+    top: '75%',
+    height: '25%',
     offset: 0,
     lineWidth: 2
   }],
@@ -80,4 +113,7 @@ export const chartOptions = {
         showInNavigator: true
     }
   },
+  chart: {
+    height: 500
+  }
 }
