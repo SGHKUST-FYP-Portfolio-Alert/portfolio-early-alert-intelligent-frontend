@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 import { chartOptions } from './chartConfig';
@@ -10,6 +10,12 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import { TreeView, TreeItem } from '@material-ui/lab';
 
 var highcharts;
+
+function timestampToNearestDate(timestamp){
+  let nearestDayTimestamp = Math.round(timestamp / 86400000) * 86400000;
+  let date = new Date(nearestDayTimestamp);
+  return date.toISOString().substring(0, 10)
+}
 
 const SelectPopover = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -102,7 +108,7 @@ const SelectPopover = (props) => {
 
 const Chart = (props) => {
 
-  const chartData = props.chartData;
+  const { chartData, setNewsListParam } = props;
 
   let series = [];
 
@@ -114,7 +120,18 @@ const Chart = (props) => {
   const options = {
     series,
     ...chartOptions,
-    chart: { ...chartOptions.chart, events: { render: function(){ highcharts = this}}},
+    chart: { ...chartOptions.chart, events: { 
+      render: function(){ highcharts = this},
+      click: function(e){setNewsListParam({ date: timestampToNearestDate(e.xAxis[0].value), page: 1})},
+    }},
+    plotOptions: {
+      series: { ...chartOptions.plotOptions.series,
+        events: {click: function(e){setNewsListParam({ date: timestampToNearestDate(e.point.category), page: 1})},}
+      },
+      column: { ...chartOptions.plotOptions.column,
+        events: {click: function(e){setNewsListParam({ date: timestampToNearestDate(e.point.category), page: 1})},}
+      }
+    }
   };
 
   return (
@@ -131,4 +148,4 @@ const Chart = (props) => {
   )
 };
 
-export default Chart
+export default memo(Chart)
