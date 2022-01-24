@@ -4,11 +4,19 @@ import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';
+import { Pagination } from "@material-ui/lab";
 import axios from "axios";
 import { colors, serverURL } from "../../../constants";
 import Chip from '@material-ui/core/Chip';
 
 const useStyles = makeStyles((theme) => ({
+  headerRow: {
+    display: 'flex',
+    marginTop: theme.spacing(1),
+    '& > *': {
+      marginRight: theme.spacing(5)
+    }
+  },
   listItem: {
     display: 'block',
     '& > *': {
@@ -68,31 +76,40 @@ const NewListItem = ({newsItem}) => {
         .map(keyword => <Chip size="small" label={keyword} key={keyword}/>)
       }
     </div>
-    <Typography variant="body2">{newsItem.summary}</Typography>
+    <Typography variant="body2" >{newsItem.summary}</Typography>
   </ListItem>
   )
 };
 
 const NewsList = (props) => {
 
-  const { counterparty } = props
+  const { counterparty, newsListParam, setNewsListParam } = props
   const [ data, setData ] = useState([]);
 
+  const { page, date } = newsListParam;
+
+  const classes = useStyles();
+
   useEffect(function(){
-    axios.get(serverURL + `news?counterparty=${counterparty}&limit=5` )
+    axios.get(serverURL + `news?counterparty=${counterparty}&limit=5&skip=${(page-1)*5}`+ (date? `&date=${date}` : '') )
       .then((response)=>{
         setData(response.data)
       })
       .catch((error)=> console.log("TODO error handling", error))
-  }, [])
+  }, [page, date])
 
-
+  function handlePageChange(evt, page){
+    setNewsListParam({...newsListParam, page})
+  }
 
   return (
   <div>
-    <Typography variant="h6">
-        News
-    </Typography>
+    <div className={classes.headerRow}>
+      <Typography variant="h6">
+          News
+      </Typography>
+      <Pagination count={10} page={page} onChange={handlePageChange}/>
+    </div>
     <List>
       {data.map((newsItem, index) => <NewListItem newsItem={newsItem} key={index}/>)}
     </List>

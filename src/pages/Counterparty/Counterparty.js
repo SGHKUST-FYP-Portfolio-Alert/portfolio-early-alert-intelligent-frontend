@@ -50,6 +50,8 @@ const Counterparty = (props) => {
 
   const [ data, setData ] = useState({});
   const [ chartData, setChartData ] = useState({});
+  
+  const [ newsListParam, setNewsListParam ] = useState({page: 1})
 
   useEffect(()=>{
 
@@ -116,8 +118,8 @@ const Counterparty = (props) => {
           )}
         </div>
       </div>
-      {(chartData.price && chartData.calculation) && <Chart chartData={chartData}/>}
-      <NewsList counterparty={counterpartyId}/>
+      {(chartData.price && chartData.calculation) && <Chart chartData={chartData} setNewsListParam={setNewsListParam}/>}
+      <NewsList counterparty={counterpartyId} newsListParam={newsListParam} setNewsListParam={setNewsListParam}/>
       <Typography variant="h6">
         Past Alert
       </Typography>
