@@ -13,6 +13,7 @@ import axios from 'axios';
 import { serverURL } from '../../constants'
 import Chart from './components/Chart';
 import { parseCalculationData, parsePriceData } from './components/chartHelper';
+import NewsList from './components/NewsList';
 
 const useStyles = makeStyles((theme) => ({
   counterparty: {
@@ -52,11 +53,6 @@ const Counterparty = (props) => {
 
   useEffect(()=>{
 
-    axios.get(serverURL + `news?counterparty=${counterpartyId}&limit=5` )
-      .then((response)=>{
-        setData(prevState =>({...prevState, news: response.data}))
-      })
-      .catch((error)=> console.log("TODO error handling", error))
     
     axios.get(serverURL + `chart/calculation?counterparty=${counterpartyId}`)
       .then((response)=>{
@@ -74,26 +70,7 @@ const Counterparty = (props) => {
 
   }, []);
 
-  const getNewListItem = (newsItem, index) => (
-    <ListItem button onClick={()=>{}} key={index}>
-      <ListItemText
-        primary={newsItem.headline}
-        secondary={
-          <React.Fragment>
-            <Typography
-              component="span"
-              variant="body2"
-              className={classes.inline}
-              color="textPrimary"
-            >
-              {newsItem.source} &emsp;-&emsp;
-            </Typography>
-            {newsItem.summary}
-          </React.Fragment>
-        }
-      />
-    </ListItem>
-  );
+
 
   const getAlertListItem = (alertItem, index) => (
     <ListItem key={index} className={classnames(classes.alertListItem, classes[alertItem.type])}>
@@ -140,12 +117,7 @@ const Counterparty = (props) => {
         </div>
       </div>
       {(chartData.price && chartData.calculation) && <Chart chartData={chartData}/>}
-      <Typography variant="h6">
-        News
-      </Typography>
-      <List>
-        {data?.news?.map((newsItem, index) => getNewListItem(newsItem, index))}
-      </List>
+      <NewsList counterparty={counterpartyId}/>
       <Typography variant="h6">
         Past Alert
       </Typography>

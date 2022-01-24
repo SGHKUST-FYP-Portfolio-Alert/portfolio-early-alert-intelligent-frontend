@@ -113,9 +113,8 @@ const Chart = (props) => {
 
   const options = {
     series,
-    chart: { events: { render: function(){ highcharts = this}}},
     ...chartOptions,
-
+    chart: { ...chartOptions.chart, events: { render: function(){ highcharts = this}}},
   };
 
   return (
