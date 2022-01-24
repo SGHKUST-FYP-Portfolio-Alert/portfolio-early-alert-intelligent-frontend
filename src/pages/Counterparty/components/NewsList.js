@@ -26,6 +26,12 @@ const useStyles = makeStyles((theme) => ({
   listTitle: {
     color: '#000'
   },
+  bodyText: {
+    display: '-webkit-box',
+    overflow: 'hidden',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 3,
+  },
   infoRow: {
     '& > *': {
       margin: theme.spacing(0.5),
@@ -76,7 +82,7 @@ const NewListItem = ({newsItem}) => {
         .map(keyword => <Chip size="small" label={keyword} key={keyword}/>)
       }
     </div>
-    <Typography variant="body2" >{newsItem.summary}</Typography>
+    <Typography variant="body2" className={classes.bodyText}>{newsItem.summary}</Typography>
   </ListItem>
   )
 };
