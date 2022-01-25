@@ -55,6 +55,12 @@ const Counterparty = (props) => {
 
   useEffect(()=>{
 
+    axios.get(serverURL + `counterparty/?symbol=${counterpartyId}`)
+    .then((response)=>{
+      setData(prevState =>({...prevState, counterpartyInfo: response.data}))
+    })
+    .catch((error)=> console.log("TODO error handling", error))
+
     
     axios.get(serverURL + `chart/calculation?counterparty=${counterpartyId}`)
       .then((response)=>{
@@ -98,11 +104,8 @@ const Counterparty = (props) => {
 
   return (
     <div className={classes.counterparty}>
-      <Typography variant="h4">
-        {data.company_name}
-      </Typography>
       <Typography variant="h6">
-        Sentiment
+        {counterpartyId} - {data.counterpartyInfo?.name}
       </Typography>
       <div className={classes.currentRow}>
         <Typography className={classes.currentRowItem}>

@@ -1,5 +1,9 @@
 export const keywords = ["Ownership change", "Change of control", "Acceleration", "accelerate", "Default", "Insolvency", "Insolvent", "Delay", "Late", "Failure", "fail", "Dispute", "Liquidation", "Liquidator", "Margin call", "Haircut", "Bank run", "Termination", "Moratorium", "Suspension", "Suspend", "Fraud", "misrepresentation", "Fine", "sanction", "Breach", "Reschedule", "Restructuring", "Restructure", "Credit event", "Losses", "Loss", "Bailout", "Bailin", "Bankrupt", "Receivership", "Receiver", "Judicial Management", "Judicial Manager", "Administration", "Administrator", "Sequestrate", "Sequestration", "Support", "Capital call", "Liquidity event", "Negative trends", "Price changes", "Board infighting", "Corruption", "Inappropriate or ultra vires dealings", "Negative working capital", "Acquisition", "LBO", "Qualified audit opinion", "Regulatory breach", "Non-performing assets", "Provisions", "Force majeur", "Distress", "Frozen", "Delisted", "Sued", "Suit", "Arrested", "Disappeared", "Uncontactable"];
 
+const sentimentTooltipConfig = {
+  pointFormat: '<span style="color:{series.color}">●</span> {series.name}: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+}
+
 export const calculationDataConfig = [
   {
     name: 'News Count',
@@ -16,7 +20,8 @@ export const calculationDataConfig = [
     stacking: 'percent',
     color: '#66ff66',
     type: 'area',
-    yAxis: 2
+    yAxis: 2,
+    tooltip: sentimentTooltipConfig
   },
   {
     name: 'Sentiments - Neutral',
@@ -26,7 +31,8 @@ export const calculationDataConfig = [
     stacking: 'percent',
     color: '#bbbbbb',
     type: 'area',
-    yAxis: 2
+    yAxis: 2,
+    tooltip: sentimentTooltipConfig
   },
   {
     name: 'Sentiments - Negative',
@@ -36,7 +42,8 @@ export const calculationDataConfig = [
     stacking: 'percent',
     type: 'area',
     color: '#ff6666' ,
-    yAxis: 2
+    yAxis: 2,
+    tooltip: sentimentTooltipConfig
   },
   ...keywords.map(keyword => ({
     name: 'Keyword - ' + keyword,
@@ -51,7 +58,11 @@ export const priceDataConfig = [
   {
     name: 'Price',
     key: 'Close',
-    compare: 'percent'
+    compare: 'percent',
+    tooltip: {
+      pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
+      valueDecimals: 2,
+    },
   }
 ]
 
