@@ -78,7 +78,7 @@ const NewListItem = ({newsItem}) => {
     <div className={classes.infoRow}>
       <Typography variant="subtitle2">{newsItem.source} - {newsItem.date}</Typography>
       <SentimentChip sentiment={newsItem.sentiment}/>
-      {Object.keys(newsItem.keyword_count)
+      {newsItem.keyword_count && Object.keys(newsItem.keyword_count)
         .map(keyword => <Chip size="small" label={keyword} key={keyword}/>)
       }
     </div>
