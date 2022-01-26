@@ -88,7 +88,9 @@ export const chartOptions = {
     labels: {align: 'right', x: -3},
     height: '25%',
     lineWidth: 2,
-    resize: {enabled: true}
+    resize: {enabled: true},
+    endOnTick: false,
+    tickPixelInterval: 25
   },{
     labels: {align: 'left', x: 3},
     title: { text: 'News Count'},
