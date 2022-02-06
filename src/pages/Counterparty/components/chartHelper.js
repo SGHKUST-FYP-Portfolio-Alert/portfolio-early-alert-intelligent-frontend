@@ -10,7 +10,7 @@ function parseData(input, config){
     const path = key.split('.');
     const data = input.map((obj, idx) => 
       [datetime[idx], path.reduce((prev, curr)=> prev?.[curr], obj) || defaultValue]
-    ).filter(([_, value]) => value);
+    ).filter(([_, value]) => value != undefined);
     return {
       data,
       key,
