@@ -79,7 +79,7 @@ const CounterpartyList = (props) => {
         columns={columns}
         rows={counterparties}
         getRowId={(row) => row.symbol}
-        onRowClick={({row})=>history.push("/counterparty?id="+row.symbol)}
+        onRowClick={({row})=>history.push("/counterparty?symbol="+row.symbol)}
         onSelectionModelChange={(val)=>setSelectedCounterparties(val)}
       />
     </div>

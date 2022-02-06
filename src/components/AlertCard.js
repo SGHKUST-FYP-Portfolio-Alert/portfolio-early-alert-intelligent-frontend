@@ -84,7 +84,7 @@ const AlertCard = (props) => {
     key={key}
     >
       <CardContent
-        onClick={()=>history.push("/counterparty?id="+item.company_id)}
+        onClick={()=>history.push("/counterparty?symbol="+item.company_id)}
       >
         <div className={classes.Row}>
           <Typography variant="h6" className={classes.companyName}>

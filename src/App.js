@@ -11,6 +11,7 @@ import CounterpartyList from './pages/CounterpartyList';
 import Counterparty from './pages/Counterparty/Counterparty';
 import { ThemeProvider } from '@material-ui/styles';
 import NewCounterparty from './pages/NewCounterparty';
+import AddKeyword from './pages/AddKeyword';
 import { useState } from 'react';
 
 import {
@@ -87,6 +88,7 @@ function App() {
               <Route exact path="/counterparty-list" render={(props) => <CounterpartyList/>}/>
               <Route exact path="/counterparty" render={props => <Counterparty/>}/>
               <Route exact path="/new-counterparty" render={props => <NewCounterparty/>}/>
+              <Route exact path="/add-keyword" render={props => <AddKeyword/>}/>
             </Switch>
           </div>
         </div>
