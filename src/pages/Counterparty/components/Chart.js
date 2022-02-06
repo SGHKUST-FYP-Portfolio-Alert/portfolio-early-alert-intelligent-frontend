@@ -90,7 +90,7 @@ const SelectPopover = (props) => {
 
   return (
     <>
-    <Button variant="outlined" onClick={handleClick}>Display/ Hide Data</Button>
+    <Button variant="outlined" size="small" onClick={handleClick}>Display/ Hide Data</Button>
     <Popover
       open={Boolean(anchorEl)}
       anchorEl={anchorEl}

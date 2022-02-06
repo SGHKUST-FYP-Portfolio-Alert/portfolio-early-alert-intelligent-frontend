@@ -14,6 +14,7 @@ import { serverURL } from '../../constants'
 import Chart from './components/Chart';
 import { parseCalculationData, parsePriceData } from './components/chartHelper';
 import NewsList from './components/NewsList';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
   counterparty: {
@@ -38,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
   warning: {
     backgroundColor: colors.amber[400],
   },
+  button: {
+    marginRight: theme.spacing(1)
+  }
 }));
 
 const Counterparty = (props) => {
@@ -46,7 +50,7 @@ const Counterparty = (props) => {
   const { history } = props;
 
   const queryParams = new URLSearchParams(document.location.search);
-  const counterpartyId = queryParams.get('id')
+  const counterparty = queryParams.get('symbol')
 
   const [ data, setData ] = useState({});
   const [ chartData, setChartData ] = useState({});
@@ -55,21 +59,21 @@ const Counterparty = (props) => {
 
   useEffect(()=>{
 
-    axios.get(serverURL + `counterparty/?symbol=${counterpartyId}`)
+    axios.get(serverURL + `counterparty/?symbol=${counterparty}`)
     .then((response)=>{
       setData(prevState =>({...prevState, counterpartyInfo: response.data}))
     })
     .catch((error)=> console.log("TODO error handling", error))
 
     
-    axios.get(serverURL + `chart/calculation?counterparty=${counterpartyId}`)
+    axios.get(serverURL + `chart/calculation?counterparty=${counterparty}`)
       .then((response)=>{
         setData(prevState =>({...prevState, calculation: response.data}))
         setChartData(prevState => ({...prevState, calculation: parseCalculationData(response.data)}))
       })
       .catch((error)=> console.log("TODO error handling", error))
 
-    axios.get(serverURL + `chart/price?counterparty=${counterpartyId}`)
+    axios.get(serverURL + `chart/price?counterparty=${counterparty}`)
       .then((response)=>{
         setData(prevState =>({...prevState, price: response.data}));
         setChartData(prevState => ({...prevState, price: parsePriceData(response.data)}))
@@ -105,7 +109,7 @@ const Counterparty = (props) => {
   return (
     <div className={classes.counterparty}>
       <Typography variant="h6">
-        {counterpartyId} - {data.counterpartyInfo?.name}
+        {counterparty} - {data.counterpartyInfo?.name}
       </Typography>
       <div className={classes.currentRow}>
         <Typography className={classes.currentRowItem}>
@@ -121,8 +125,13 @@ const Counterparty = (props) => {
           )}
         </div>
       </div>
+      <Button variant="contained" size="small" className={classes.button}
+        onClick={()=>history.push(`/add-keyword?symbol=${counterparty}`)}
+      >
+        Edit Keywords
+      </Button>
       {(chartData.price && chartData.calculation) && <Chart chartData={chartData} setNewsListParam={setNewsListParam}/>}
-      <NewsList counterparty={counterpartyId} newsListParam={newsListParam} setNewsListParam={setNewsListParam}/>
+      <NewsList counterparty={counterparty} newsListParam={newsListParam} setNewsListParam={setNewsListParam}/>
       <Typography variant="h6">
         Past Alert
       </Typography>
