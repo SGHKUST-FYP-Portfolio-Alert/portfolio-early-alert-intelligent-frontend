@@ -7,7 +7,6 @@ import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   addkeyword: {
-    textAlign: 'center',
     padding: theme.spacing(3),
   },
   row: {
