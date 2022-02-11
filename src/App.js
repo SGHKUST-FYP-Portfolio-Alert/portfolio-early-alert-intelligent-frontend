@@ -13,6 +13,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import NewCounterparty from './pages/NewCounterparty';
 import AddKeyword from './pages/AddKeyword';
 import { useState } from 'react';
+import Fab from '@material-ui/core/Fab';
 
 import {
   BrowserRouter,
@@ -48,13 +49,20 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   page: {
-    marginTop: 64,
     flexGrow: 1,
+    padding: theme.spacing(2)
   }, 
   menuButton: {
     [theme.breakpoints.up('sm')]: {
       display: 'none',
     }
+  },
+  fab: {
+    position: 'fixed',
+    bottom: 16,
+    left:16,
+    backgroundColor: '#101F33',
+    color: '#e0e0e0'
   }
 }));
 
@@ -71,16 +79,6 @@ function App() {
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <div className={classes.root}>
-          <AppBar position="fixed" className={classes.appBar}>
-            <Toolbar>
-              <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={handleClick}>
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" className={classes.title}>
-                Counterparty Risk Early Alert
-              </Typography>
-            </Toolbar>
-          </AppBar>
           <Sidebar mobileSidebarOpen={mobileSidebarOpen} setMobileSidebarOpen={setMobileSidebarOpen}/>
           <div className={classes.page}>
             <Switch>
@@ -91,6 +89,9 @@ function App() {
               <Route exact path="/add-keyword" render={props => <AddKeyword/>}/>
             </Switch>
           </div>
+          <Fab className={classes.fab} onClick={()=>setMobileSidebarOpen(true)}>
+            <MenuIcon />
+          </Fab>
         </div>
       </BrowserRouter>
     </ThemeProvider>

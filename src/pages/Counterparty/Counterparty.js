@@ -17,14 +17,17 @@ import NewsList from './components/NewsList';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
-  counterparty: {
-    padding: theme.spacing(3),
-  },
   currentRow: {
+    display: 'flex',
+    marginBottom: theme.spacing(1),
+    alignItems: 'center',
+    '& > *': {
+      display: 'inline-flex',
+      marginRight: theme.spacing(3),
+    }
   },
-  currentRowItem: {
-    display: 'inline-flex',
-    marginRight: theme.spacing(3),
+  title: {
+    flexGrow: 1
   },
   alertListItem: {
     padding: 0,
@@ -108,15 +111,15 @@ const Counterparty = (props) => {
 
   return (
     <div className={classes.counterparty}>
-      <Typography variant="h6">
-        {counterparty} - {data.counterpartyInfo?.name}
-      </Typography>
       <div className={classes.currentRow}>
-        <Typography className={classes.currentRowItem}>
+        <Typography variant="h6" className={classes.title}>
+          {counterparty} - {data.counterpartyInfo?.name}
+        </Typography>
+        <Typography>
           Current:
         </Typography>
         {/* <Chip className={classes.currentRowItem} label={data.sentimentHistory?.[data.sentimentHistory.length - 1]?.average_score.toFixed(2)} color='secondary'/> */}
-        <Typography className={classes.currentRowItem}>
+        <Typography>
           Keywords:
         </Typography>
         <div className={classes.currentRowItem}>

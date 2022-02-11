@@ -10,7 +10,6 @@ import { useState, useEffect } from "react";
 const useStyles = makeStyles((theme) => ({
   counterpartyList: {
     textAlign: 'center',
-    padding: theme.spacing(3),
   },
   buttonRow: {
     textAlign: 'left',
