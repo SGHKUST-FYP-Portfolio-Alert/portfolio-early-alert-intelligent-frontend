@@ -13,6 +13,12 @@ export const calculationDataConfig = [
     yAxis: 1
   },
   {
+    name: 'Sentiments - rolling average',
+    key: 'sentiments.rolling_avg',
+    group: 'sentiments',
+    yAxis: 4
+  },
+  {
     name: 'Sentiments - Positive',
     key: 'sentiments.1',
     defaultValue: 0,
@@ -47,7 +53,7 @@ export const calculationDataConfig = [
   },
   ...keywords.map(keyword => ({
     name: 'Keyword - ' + keyword,
-    key: 'keyword_count.'+ keyword,
+    key: 'keyword_count.'+ keyword.toLowerCase(),
     type: 'column',
     group: 'keyword',  
     yAxis: 3
@@ -116,7 +122,18 @@ export const chartOptions = {
     height: '25%',
     offset: 0,
     lineWidth: 2
-  }],
+  },{
+    title: { text: 'R.A. Sentiments'},
+    labels: {align: 'left', x: 3},
+    height: '25%',
+    offset: 0,
+    opposite: false,
+    lineWidth: 2,
+    resize: {enabled: true},
+    endOnTick: false,
+    tickPixelInterval: 25,
+    showEmpty: false,
+  },],
   plotOptions: {
     column: {
       pointRange:24 * 60 * 60 * 1000,
