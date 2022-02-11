@@ -90,7 +90,8 @@ export const chartOptions = {
     lineWidth: 2,
     resize: {enabled: true},
     endOnTick: false,
-    tickPixelInterval: 25
+    tickPixelInterval: 25,
+    showEmpty: false,
   },{
     labels: {align: 'left', x: 3},
     title: { text: 'News Count'},
@@ -126,7 +127,7 @@ export const chartOptions = {
         showInNavigator: true
     }
   },
-  chart: {
-    height: 500
-  }
+  // chart: {
+  //   height: 500
+  // }
 }
