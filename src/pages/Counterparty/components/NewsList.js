@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/styles";
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import Avatar from "@material-ui/core/Avatar";
 import Typography from '@material-ui/core/Typography';
 import { Pagination } from "@material-ui/lab";
 import axios from "axios";
@@ -18,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   listItem: {
-    display: 'block',
+    display: 'flex',
     '& > *': {
       color: '#555'
     }
@@ -37,6 +38,11 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(0.5),
       display: 'inline-flex'
     }
+  },
+  image: {
+    width: 130,
+    height: 80,
+    marginRight: theme.spacing(2)  
   }
 }));
 
@@ -74,15 +80,20 @@ const NewListItem = ({newsItem}) => {
 
   return (
   <ListItem button onClick={()=>{}} className={classes.listItem}>
-    <Typography className={classes.listTitle}>{newsItem.headline}</Typography>
-    <div className={classes.infoRow}>
-      <Typography variant="subtitle2">{newsItem.source} - {newsItem.date}</Typography>
-      <SentimentChip sentiment={newsItem.sentiment}/>
-      {newsItem.keyword_count && Object.keys(newsItem.keyword_count)
-        .map(keyword => <Chip size="small" label={keyword} key={keyword}/>)
-      }
-    </div>
+    <Avatar variant="rounded" src={newsItem.image} className={classes.image}>
+      {newsItem.source}
+    </Avatar>
+    <div className={classes.newsContent}>
+      <Typography className={classes.listTitle}>{newsItem.headline}</Typography>
+      <div className={classes.infoRow}>
+        <Typography variant="subtitle2">{newsItem.source} - {newsItem.date}</Typography>
+        <SentimentChip sentiment={newsItem.sentiment}/>
+        {newsItem.keyword_count && Object.keys(newsItem.keyword_count)
+          .map(keyword => <Chip size="small" label={keyword} key={keyword}/>)
+        }
+      </div>
     <Typography variant="body2" className={classes.bodyText}>{newsItem.summary}</Typography>
+    </div>
   </ListItem>
   )
 };
