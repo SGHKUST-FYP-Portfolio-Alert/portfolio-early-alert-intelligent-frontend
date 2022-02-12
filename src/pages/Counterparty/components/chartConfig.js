@@ -13,16 +13,16 @@ export const calculationDataConfig = [
     yAxis: 1
   },
   {
-    name: 'Sentiments - rolling average',
+    name: 'Rolling Average',
     key: 'sentiments.rolling_avg',
-    group: 'sentiments',
+    group: 'Sentiments',
     yAxis: 4
   },
   {
-    name: 'Sentiments - Positive',
+    name: 'Positive',
     key: 'sentiments.1',
     defaultValue: 0,
-    group: 'sentiments',
+    group: 'Sentiments',
     stacking: 'percent',
     color: '#66ff66',
     type: 'area',
@@ -30,10 +30,10 @@ export const calculationDataConfig = [
     tooltip: sentimentTooltipConfig
   },
   {
-    name: 'Sentiments - Neutral',
+    name: 'Neutral',
     key: 'sentiments.0',
     defaultValue: 0,
-    group: 'sentiments',
+    group: 'Sentiments',
     stacking: 'percent',
     color: '#bbbbbb',
     type: 'area',
@@ -41,10 +41,10 @@ export const calculationDataConfig = [
     tooltip: sentimentTooltipConfig
   },
   {
-    name: 'Sentiments - Negative',
+    name: 'Negative',
     key: 'sentiments.-1',
     defaultValue: 0,
-    group: 'sentiments',
+    group: 'Sentiments',
     stacking: 'percent',
     type: 'area',
     color: '#ff6666' ,
@@ -52,10 +52,10 @@ export const calculationDataConfig = [
     tooltip: sentimentTooltipConfig
   },
   ...keywords.map(keyword => ({
-    name: 'Keyword - ' + keyword,
+    name: keyword,
     key: 'keyword_count.'+ keyword.toLowerCase(),
     type: 'column',
-    group: 'keyword',  
+    group: 'Keywords',  
     yAxis: 3
   }))
 ];
