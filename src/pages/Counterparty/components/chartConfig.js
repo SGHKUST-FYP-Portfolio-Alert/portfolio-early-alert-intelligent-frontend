@@ -10,13 +10,14 @@ export const calculationDataConfig = [
     key: 'news_count',
     zIndex: 1,
     color: '#000000',
-    yAxis: 1
+    yAxis: 'news_count'
   },
   {
-    name: 'Rolling Average',
+    name: 'Sentiment WMA',
     key: 'sentiments.rolling_avg',
     group: 'Sentiments',
-    yAxis: 4
+    yAxis: 'sentiment_score',
+    tooltip: { valueDecimals: 2}
   },
   {
     name: 'Positive',
@@ -26,7 +27,7 @@ export const calculationDataConfig = [
     stacking: 'percent',
     color: '#66ff66',
     type: 'area',
-    yAxis: 2,
+    yAxis: 'sentiments',
     tooltip: sentimentTooltipConfig
   },
   {
@@ -37,8 +38,9 @@ export const calculationDataConfig = [
     stacking: 'percent',
     color: '#bbbbbb',
     type: 'area',
-    yAxis: 2,
-    tooltip: sentimentTooltipConfig
+    yAxis: 'sentiments',
+    tooltip: sentimentTooltipConfig,
+    visible: false
   },
   {
     name: 'Negative',
@@ -48,7 +50,7 @@ export const calculationDataConfig = [
     stacking: 'percent',
     type: 'area',
     color: '#ff6666' ,
-    yAxis: 2,
+    yAxis: 'sentiments',
     tooltip: sentimentTooltipConfig
   },
   ...keywords.map(keyword => ({
@@ -56,7 +58,7 @@ export const calculationDataConfig = [
     key: 'keyword_count.'+ keyword.toLowerCase(),
     type: 'column',
     group: 'Keywords',  
-    yAxis: 3
+    yAxis: 'keywords'
   }))
 ];
 
@@ -69,6 +71,7 @@ export const priceDataConfig = [
       pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
       valueDecimals: 2,
     },
+    yAxis: 'price'
   }
 ]
 
@@ -90,47 +93,60 @@ export const chartOptions = {
     minTickInterval: 24 * 60 * 60 * 1000
   },
   yAxis: [{
-    title: { text: 'Stock Price'},
-    labels: {align: 'right', x: -3},
-    height: 100,
+    id: 'sentiment_score',
+    title: { text: 'Sentiment Score'},
+    labels: {align: 'left', x: 3},
+    height: '40%',
+    offset: 0,
+    opposite: false,
     lineWidth: 2,
-    resize: {enabled: true},
     tickPixelInterval: 25,
     showEmpty: false,
   },{
+    id: 'price',
+    title: { text: 'Stock Price'},
+    labels: {align: 'right', x: -3},
+    height: '40%',
+    lineWidth: 2,
+    resize: {
+      enabled: true, y: 6,
+      controlledAxis: {prev: ['sentiment_score'], next: ['news_count', 'sentiments']}
+    },
+    tickPixelInterval: 25,
+    showEmpty: false,
+  },{
+    id: 'news_count',
     labels: {align: 'left', x: 3},
     title: { text: 'News Count'},
     opposite: false,
-    top: 150, 
-    height: 70,
+    offset: 0,
+    top: '45%', 
+    height: '25%',
     lineWidth: 2,
-    resize: {enabled: true}
+    tickPixelInterval: 25,
   }, {
+    id: 'sentiments',
     title: { text: 'Sentiment %'},
     labels: {align: 'right', x: -3},
-    top: 150,
-    height: 70,
+    top: '45%',
+    height: '25%',
     lineWidth: 2,
     offset: 0,
-    resize: {enabled: true}
+    resize: {
+      enabled: true, y:6, 
+      controlledAxis: {prev: ['news_count'], next: ['keywords']}
+    },
+    tickPixelInterval: 25,
   },
   {
+    id: 'keywords',
     labels: {align: 'right', x: -3},
     title: {text: 'Keywords'},
-    top: 225,
-    height: 60,
+    top: '75%',
+    height: '25%',
     offset: 0,
-    lineWidth: 2
-  },{
-    title: { text: 'VWMA Sentiments'},
-    labels: {align: 'left', x: 3},
-    height: 100,
-    offset: 0,
-    opposite: false,
     lineWidth: 2,
-    resize: {enabled: true},
     tickPixelInterval: 25,
-    showEmpty: false,
   },],
   plotOptions: {
     column: {
@@ -142,7 +158,7 @@ export const chartOptions = {
         showInNavigator: true
     }
   },
-  // chart: {
-  //   height: 500
-  // }
+  chart: {
+    height: 450
+  }
 }

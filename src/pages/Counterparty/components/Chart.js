@@ -8,6 +8,7 @@ import CheckboxWithLabel from '../../../components/CheckboxWithLabel';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import { TreeView, TreeItem } from '@material-ui/lab';
+import DragPanes from "highcharts/modules/drag-panes.js";
 
 var highcharts;
 
@@ -27,7 +28,7 @@ const SelectPopover = (props) => {
   const serieskeyToIdx = Object.fromEntries(series.map((s, idx) => [s.key, idx]));
 
   useEffect(()=>{
-    setChecked(Object.fromEntries(series.map(s => [s.key, true])))
+    setChecked(Object.fromEntries(series.map(s => [s.key, s.visible === undefined? true: s.visible])))
   }, [series])
 
   function handleClick(evt){
@@ -133,6 +134,8 @@ const Chart = (props) => {
       }
     }
   };
+
+  DragPanes(Highcharts);
 
   return (
     <>
