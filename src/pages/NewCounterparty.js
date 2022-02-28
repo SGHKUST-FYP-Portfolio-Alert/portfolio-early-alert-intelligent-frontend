@@ -98,6 +98,7 @@ const NewCounterparty = (props) => {
     return (
     <TextField {...params} 
       label="Search Counterparty"
+      variant="outlined"
       InputProps={{
         ...params.InputProps,
         endAdornment: (
