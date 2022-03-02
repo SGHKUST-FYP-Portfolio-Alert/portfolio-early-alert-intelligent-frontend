@@ -7,15 +7,19 @@ import { Typography } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import Chip from '@material-ui/core/Chip';
+import CounterpartyList from '../components/CounterpartyList';
+import { Button } from '@material-ui/core';
+import { FormControlLabel, Switch, Grid } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   page: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(1),
   },
   row: {
     alignContent: 'center',
+    marginBottom: theme.spacing(1.5),
     '& > *': {
-      margin: theme.spacing(0.7),
+      marginRight: theme.spacing(1),
       display: 'inline-flex'
     }
   },
@@ -36,7 +40,7 @@ const EditTopic = (props) => {
 
   const [selectedCounterparties, setSelectedCounterparties] = useState([])
   const [selectedCounterpartyForSuggestion, setSelectedCounterpartyForSuggestion] = useState(counterparty)
-  const [topicData, setTopicData] = useState([]);
+  const [topicData, setTopicData] = useState({counterparties: counterparty? [counterparty]:'global'});
   const [ldaSuggestion, setLdaSuggestion] = useState({});
 
   useEffect(function(){
@@ -67,21 +71,41 @@ const EditTopic = (props) => {
     />)
   }
 
-  const TopicSuggestion = (props) => {
-    return <div>{
-      ldaSuggestion?.topics?.map((topic, i) =>
+  const TopicSuggestion = () => {
+    return <div>
+      <Autocomplete
+        renderInput={renderAutocompleteInput}
+        style={{ width: 250 }}
+        className={classes.autocomplete}
+        value={selectedCounterpartyForSuggestion}
+        options={[]}
+      />
+      {ldaSuggestion?.topics?.map((topic, i) =>
         <div className={classes.row}>
           <Typography>LDA {i}:</Typography>
           {topic[1].slice(0, 8).map(keyword =>
             <Chip size="small" label={keyword[0]}/>
           )}
         </div>
-      )
-    }</div>
+      )}
+    </div>
+  }
+
+  function handleSwitchClick(){
+    if (topicData.counterparties === 'global') {
+      setTopicData({...topicData, counterparties: []})
+    } else {
+      setTopicData({...topicData, counterparties: 'global'})
+    }
   }
 
   return (
     <div className={classes.page}>
+      <div className={classes.row}>
+        <Button variant="contained" color="primary" >Save</Button>
+        <Button variant="contained" color="secondary">Cancel</Button>
+        <Button variant="contained" >Reset</Button>
+      </div>
       <div className={classes.row}>
         <TextField
           variant="outlined"
@@ -107,14 +131,20 @@ const EditTopic = (props) => {
           }
         />
       </div>
-      <Autocomplete
-        renderInput={renderAutocompleteInput}
-        style={{ width: 250 }}
-        className={classes.autocomplete}
-        value={selectedCounterpartyForSuggestion}
-        options={[]}
-      />
       <TopicSuggestion />
+      
+      <Grid component="label" container alignItems="center" spacing={0}>
+        <Grid item>Track this topic for All</Grid>
+        <Grid item>
+          <Switch checked={topicData.counterparties !== 'global'} onClick={handleSwitchClick} name="checkedC" />
+        </Grid>
+        <Grid item>Selected Counterparties</Grid>
+      </Grid>
+      { topicData.counterparties !== 'global' &&
+        <CounterpartyList
+          pageSize={10} 
+        />
+      }
     </div>
   );
 }
