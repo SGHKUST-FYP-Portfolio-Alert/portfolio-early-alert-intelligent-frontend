@@ -1,0 +1,152 @@
+import { makeStyles } from '@material-ui/core/styles';
+import { useEffect, useState } from 'react';
+import { withRouter } from 'react-router-dom';
+import axios from 'axios';
+import { serverURL } from '../constants';
+import { Typography } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
+import Chip from '@material-ui/core/Chip';
+import CounterpartyList from '../components/CounterpartyList';
+import { Button } from '@material-ui/core';
+import { FormControlLabel, Switch, Grid } from '@material-ui/core';
+
+const useStyles = makeStyles((theme) => ({
+  page: {
+    padding: theme.spacing(1),
+  },
+  row: {
+    alignContent: 'center',
+    marginBottom: theme.spacing(1.5),
+    '& > *': {
+      marginRight: theme.spacing(1),
+      display: 'inline-flex'
+    }
+  },
+  autocomplete: {
+    margin: 0,
+    marginTop: -2.5
+  }
+}));
+
+const EditTopic = (props) => {
+
+  const classes = useStyles();
+  const { history } = props;
+
+  const queryParams = new URLSearchParams(document.location.search);
+  const topicId = queryParams.get('topicId')
+  const counterparty = queryParams.get('symbol')
+
+  const [selectedCounterparties, setSelectedCounterparties] = useState([])
+  const [selectedCounterpartyForSuggestion, setSelectedCounterpartyForSuggestion] = useState(counterparty)
+  const [topicData, setTopicData] = useState({counterparties: counterparty? [counterparty]:'global'});
+  const [ldaSuggestion, setLdaSuggestion] = useState({});
+
+  useEffect(function(){
+    if (!selectedCounterpartyForSuggestion) return;
+    axios.get(serverURL + `lda?symbol=${selectedCounterpartyForSuggestion}`)
+    .then((response)=>{
+      setLdaSuggestion(response.data)
+    })
+    .catch((error)=> console.log("TODO error handling", error))
+  }, [selectedCounterpartyForSuggestion])
+
+  useEffect(function(){
+    if (!topicId) return;
+    axios.get(serverURL + `topic/?id=${topicId}`)
+    .then((response)=>{
+      setTopicData(response.data)
+    })
+    .catch((error)=> console.log("TODO error handling", error))
+  }, [])
+
+  function renderAutocompleteInput(params){
+    return (
+    <TextField
+      {...params}
+      label="Show topic suggestion for"
+      variant="outlined"
+      margin="dense"
+    />)
+  }
+
+  const TopicSuggestion = () => {
+    return <div>
+      <Autocomplete
+        renderInput={renderAutocompleteInput}
+        style={{ width: 250 }}
+        className={classes.autocomplete}
+        value={selectedCounterpartyForSuggestion}
+        options={[]}
+      />
+      {ldaSuggestion?.topics?.map((topic, i) =>
+        <div className={classes.row}>
+          <Typography>LDA {i}:</Typography>
+          {topic[1].slice(0, 8).map(keyword =>
+            <Chip size="small" label={keyword[0]}/>
+          )}
+        </div>
+      )}
+    </div>
+  }
+
+  function handleSwitchClick(){
+    if (topicData.counterparties === 'global') {
+      setTopicData({...topicData, counterparties: []})
+    } else {
+      setTopicData({...topicData, counterparties: 'global'})
+    }
+  }
+
+  return (
+    <div className={classes.page}>
+      <div className={classes.row}>
+        <Button variant="contained" color="primary" >Save</Button>
+        <Button variant="contained" color="secondary">Cancel</Button>
+        <Button variant="contained" >Reset</Button>
+      </div>
+      <div className={classes.row}>
+        <TextField
+          variant="outlined"
+          label="Title"
+          margin="dense"
+          value={topicData?.title}
+          InputLabelProps={{ shrink: Boolean(topicData?.title) }}
+        />
+        <Autocomplete
+          multiple
+          freeSolo
+          style={{ minWidth: 250 }}
+          className={classes.autocomplete}
+          options={[]}
+          value={topicData?.keywords || []}
+          renderInput={params =>
+            <TextField
+              {...params}
+              variant="outlined"
+              label="Keywords"
+              margin="dense"
+            />
+          }
+        />
+      </div>
+      <TopicSuggestion />
+      
+      <Grid component="label" container alignItems="center" spacing={0}>
+        <Grid item>Track this topic for All</Grid>
+        <Grid item>
+          <Switch checked={topicData.counterparties !== 'global'} onClick={handleSwitchClick} name="checkedC" />
+        </Grid>
+        <Grid item>Selected Counterparties</Grid>
+      </Grid>
+      { topicData.counterparties !== 'global' &&
+        <CounterpartyList
+          pageSize={10} 
+        />
+      }
+    </div>
+  );
+}
+
+export default withRouter(EditTopic)

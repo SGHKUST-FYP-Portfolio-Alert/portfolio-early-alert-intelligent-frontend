@@ -9,9 +9,10 @@ import Sidebar from './components/Sidebar'
 import Dashboard from './pages/Dashboard';
 import CounterpartyList from './pages/CounterpartyList';
 import Counterparty from './pages/Counterparty/Counterparty';
+import TopicList from './pages/TopicList';
 import { ThemeProvider } from '@material-ui/styles';
 import NewCounterparty from './pages/NewCounterparty';
-import AddKeyword from './pages/AddKeyword';
+import EditTopic from './pages/EditTopic';
 import { useState } from 'react';
 import Fab from '@material-ui/core/Fab';
 
@@ -86,7 +87,8 @@ function App() {
               <Route exact path="/counterparty-list" render={(props) => <CounterpartyList/>}/>
               <Route exact path="/counterparty" render={props => <Counterparty/>}/>
               <Route exact path="/new-counterparty" render={props => <NewCounterparty/>}/>
-              <Route exact path="/add-keyword" render={props => <AddKeyword/>}/>
+              <Route exact path="/edit-topic" render={props => <EditTopic/>}/>
+              <Route exact path="/topic-list" render={(props) => <TopicList/>}/>
             </Switch>
           </div>
           <Fab className={classes.fab} onClick={()=>setMobileSidebarOpen(true)}>

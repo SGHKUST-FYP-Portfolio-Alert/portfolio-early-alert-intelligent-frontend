@@ -6,6 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import BarChartIcon from '@material-ui/icons/BarChart';
 import BusinessIcon from '@material-ui/icons/Business';
+import TextFieldsIcon from '@material-ui/icons/TextFields';
 import { makeStyles, Typography } from "@material-ui/core";
 import Hidden from '@material-ui/core/Hidden';
 
@@ -57,6 +58,11 @@ const sideBarItems = [
     label: 'Counterparties',
     route: '/counterparty-list',
     icon: <BusinessIcon />
+  },
+  {
+    label: 'Topics',
+    route: 'topic-list',
+    icon: <TextFieldsIcon />
   }
 ]
 const Sidebar = (props) => {

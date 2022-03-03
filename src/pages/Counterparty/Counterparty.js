@@ -129,7 +129,7 @@ const Counterparty = (props) => {
         </div>
       </div>
       <Button variant="contained" size="small" className={classes.button}
-        onClick={()=>history.push(`/add-keyword?symbol=${counterparty}`)}
+        onClick={()=>history.push(`/edit-topic?symbol=${counterparty}`)}
       >
         Edit Keywords
       </Button>
