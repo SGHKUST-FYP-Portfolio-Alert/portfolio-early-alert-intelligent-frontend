@@ -38,9 +38,11 @@ const EditTopic = (props) => {
   const topicId = queryParams.get('topicId')
   const counterparty = queryParams.get('symbol')
 
-  const [selectedCounterparties, setSelectedCounterparties] = useState([])
   const [selectedCounterpartyForSuggestion, setSelectedCounterpartyForSuggestion] = useState(counterparty)
-  const [topicData, setTopicData] = useState({counterparties: counterparty? [counterparty]:'global'});
+  const [topicData, setTopicData] = useState({
+    counterparties: counterparty? [counterparty]:'global',
+    keywords: []
+  });
   const [ldaSuggestion, setLdaSuggestion] = useState({});
 
   useEffect(function(){
@@ -72,6 +74,13 @@ const EditTopic = (props) => {
   }
 
   const TopicSuggestion = () => {
+    function addKeyword(keyword){
+      setTopicData({
+        ...topicData, 
+        keywords: [...topicData.keywords, keyword]
+      })
+    }
+
     return <div>
       <Autocomplete
         renderInput={renderAutocompleteInput}
@@ -84,7 +93,7 @@ const EditTopic = (props) => {
         <div className={classes.row}>
           <Typography>LDA {i}:</Typography>
           {topic[1].slice(0, 8).map(keyword =>
-            <Chip size="small" label={keyword[0]}/>
+            <Chip size="small" onClick={()=>{addKeyword(keyword[0])}} label={keyword[0]}/>
           )}
         </div>
       )}
@@ -120,13 +129,15 @@ const EditTopic = (props) => {
           style={{ minWidth: 250 }}
           className={classes.autocomplete}
           options={[]}
-          value={topicData?.keywords || []}
+          value={topicData?.keywords}
+          onChange={function(evt, val){setTopicData({...topicData, keywords: val})}}
           renderInput={params =>
             <TextField
               {...params}
               variant="outlined"
               label="Keywords"
               margin="dense"
+              helperText="Type in the vocab then click 'Enter' or select vocab from suggestions"
             />
           }
         />
@@ -142,6 +153,8 @@ const EditTopic = (props) => {
       </Grid>
       { topicData.counterparties !== 'global' &&
         <CounterpartyList
+          selectedCounterparties={topicData.counterparties}
+          setSelectedCounterparties={function(val){setTopicData({...topicData, counterparties: val})}}
           pageSize={10} 
         />
       }
