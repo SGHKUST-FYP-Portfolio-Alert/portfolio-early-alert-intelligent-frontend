@@ -9,7 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Chip from '@material-ui/core/Chip';
 import CounterpartyList from '../components/CounterpartyList';
 import { Button } from '@material-ui/core';
-import { FormControlLabel, Switch, Grid } from '@material-ui/core';
+import { FormControlLabel, Switch, Grid, Box } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   page: {
@@ -38,7 +38,10 @@ const EditTopic = (props) => {
   const topicId = queryParams.get('topicId')
   const counterparty = queryParams.get('symbol')
 
-  const [selectedCounterpartyForSuggestion, setSelectedCounterpartyForSuggestion] = useState(counterparty)
+  const [options, setOptions] = useState([])
+  const [selectedCounterpartyForSuggestion, setSelectedCounterpartyForSuggestion] = useState(
+    counterparty? {symbol: counterparty, title: ''}: undefined
+  )
   const [topicData, setTopicData] = useState({
     counterparties: counterparty? [counterparty]:'global',
     keywords: [],
@@ -48,7 +51,7 @@ const EditTopic = (props) => {
 
   useEffect(function(){
     if (!selectedCounterpartyForSuggestion) return;
-    axios.get(serverURL + `lda?symbol=${selectedCounterpartyForSuggestion}`)
+    axios.get(serverURL + `lda?symbol=${selectedCounterpartyForSuggestion.symbol}`)
     .then((response)=>{
       setLdaSuggestion(response.data)
     })
@@ -56,6 +59,11 @@ const EditTopic = (props) => {
   }, [selectedCounterpartyForSuggestion])
 
   useEffect(function(){
+    axios.get(serverURL + 'counterparty')
+      .then(function(response){
+        setOptions(response.data)
+      })
+    
     if (!topicId) return;
     axios.get(serverURL + `topic/?id=${topicId}`)
     .then((response)=>{
@@ -88,7 +96,15 @@ const EditTopic = (props) => {
         style={{ width: 250 }}
         className={classes.autocomplete}
         value={selectedCounterpartyForSuggestion}
-        options={[]}
+        options={options}
+        getOptionLabel={(option)=>option.symbol}
+        renderOption={(option)=>
+          <Box>
+            {option.symbol} - <span>{option.name}</span>
+          </Box>
+        }
+        getOptionSelected={(option) => option.symbol == selectedCounterpartyForSuggestion.symbol}
+        onChange={function(evt, value){setSelectedCounterpartyForSuggestion(value)}}
       />
       {ldaSuggestion?.topics?.map((topic, i) =>
         <div className={classes.row}>
