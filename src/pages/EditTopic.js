@@ -41,7 +41,8 @@ const EditTopic = (props) => {
   const [selectedCounterpartyForSuggestion, setSelectedCounterpartyForSuggestion] = useState(counterparty)
   const [topicData, setTopicData] = useState({
     counterparties: counterparty? [counterparty]:'global',
-    keywords: []
+    keywords: [],
+    title: ''
   });
   const [ldaSuggestion, setLdaSuggestion] = useState({});
 
@@ -108,19 +109,29 @@ const EditTopic = (props) => {
     }
   }
 
+  function submit(){
+    axios(serverURL + 'topic', {
+      method: topicId? 'put': 'post',
+      data: topicData
+    }).then(
+      function(){history.goBack()}
+    )
+  }
+
   return (
     <div className={classes.page}>
       <div className={classes.row}>
-        <Button variant="contained" color="primary" >Save</Button>
-        <Button variant="contained" color="secondary">Cancel</Button>
-        <Button variant="contained" >Reset</Button>
+        <Button variant="contained" color="primary" onClick={submit}>Save</Button>
+        <Button variant="contained" color="secondary" onClick={()=>history.goBack()}>Cancel</Button>
+        <Button variant="contained" onClick={()=>history.go()}>Reset</Button>
       </div>
       <div className={classes.row}>
         <TextField
           variant="outlined"
           label="Title"
           margin="dense"
-          value={topicData?.title}
+          value={topicData.title}
+          onChange={function(evt){setTopicData({...topicData, title: evt.target.value})}}
           InputLabelProps={{ shrink: Boolean(topicData?.title) }}
         />
         <Autocomplete
