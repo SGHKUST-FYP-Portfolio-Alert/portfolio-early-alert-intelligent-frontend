@@ -38,9 +38,12 @@ const EditTopic = (props) => {
   const topicId = queryParams.get('topicId')
   const counterparty = queryParams.get('symbol')
 
-  const [selectedCounterparties, setSelectedCounterparties] = useState([])
   const [selectedCounterpartyForSuggestion, setSelectedCounterpartyForSuggestion] = useState(counterparty)
-  const [topicData, setTopicData] = useState({counterparties: counterparty? [counterparty]:'global'});
+  const [topicData, setTopicData] = useState({
+    counterparties: counterparty? [counterparty]:'global',
+    keywords: [],
+    title: ''
+  });
   const [ldaSuggestion, setLdaSuggestion] = useState({});
 
   useEffect(function(){
@@ -72,6 +75,13 @@ const EditTopic = (props) => {
   }
 
   const TopicSuggestion = () => {
+    function addKeyword(keyword){
+      setTopicData({
+        ...topicData, 
+        keywords: [...topicData.keywords, keyword]
+      })
+    }
+
     return <div>
       <Autocomplete
         renderInput={renderAutocompleteInput}
@@ -84,7 +94,7 @@ const EditTopic = (props) => {
         <div className={classes.row}>
           <Typography>LDA {i}:</Typography>
           {topic[1].slice(0, 8).map(keyword =>
-            <Chip size="small" label={keyword[0]}/>
+            <Chip size="small" onClick={()=>{addKeyword(keyword[0])}} label={keyword[0]}/>
           )}
         </div>
       )}
@@ -99,19 +109,29 @@ const EditTopic = (props) => {
     }
   }
 
+  function submit(){
+    axios(serverURL + 'topic', {
+      method: topicId? 'put': 'post',
+      data: topicData
+    }).then(
+      function(){history.goBack()}
+    )
+  }
+
   return (
     <div className={classes.page}>
       <div className={classes.row}>
-        <Button variant="contained" color="primary" >Save</Button>
-        <Button variant="contained" color="secondary">Cancel</Button>
-        <Button variant="contained" >Reset</Button>
+        <Button variant="contained" color="primary" onClick={submit}>Save</Button>
+        <Button variant="contained" color="secondary" onClick={()=>history.goBack()}>Cancel</Button>
+        <Button variant="contained" onClick={()=>history.go()}>Reset</Button>
       </div>
       <div className={classes.row}>
         <TextField
           variant="outlined"
           label="Title"
           margin="dense"
-          value={topicData?.title}
+          value={topicData.title}
+          onChange={function(evt){setTopicData({...topicData, title: evt.target.value})}}
           InputLabelProps={{ shrink: Boolean(topicData?.title) }}
         />
         <Autocomplete
@@ -120,13 +140,15 @@ const EditTopic = (props) => {
           style={{ minWidth: 250 }}
           className={classes.autocomplete}
           options={[]}
-          value={topicData?.keywords || []}
+          value={topicData?.keywords}
+          onChange={function(evt, val){setTopicData({...topicData, keywords: val})}}
           renderInput={params =>
             <TextField
               {...params}
               variant="outlined"
               label="Keywords"
               margin="dense"
+              helperText="Type in the vocab then click 'Enter' or select vocab from suggestions"
             />
           }
         />
@@ -142,6 +164,8 @@ const EditTopic = (props) => {
       </Grid>
       { topicData.counterparties !== 'global' &&
         <CounterpartyList
+          selectedCounterparties={topicData.counterparties}
+          setSelectedCounterparties={function(val){setTopicData({...topicData, counterparties: val})}}
           pageSize={10} 
         />
       }

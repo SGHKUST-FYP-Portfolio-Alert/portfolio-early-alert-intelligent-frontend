@@ -1,5 +1,5 @@
 import { withRouter } from "react-router-dom"
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from "@mui/x-data-grid";
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';

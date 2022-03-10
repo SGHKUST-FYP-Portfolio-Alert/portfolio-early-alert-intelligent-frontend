@@ -1,5 +1,5 @@
 import { withRouter } from "react-router-dom"
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from "@mui/x-data-grid";
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
@@ -14,9 +14,8 @@ const useStyles = makeStyles((theme) => ({
 const CounterpartyList = (props) => {
 
   const classes = useStyles();
-  const { ...rest } = props;
-  const [ counterparties, setCounterparties ] = useState([]);
-  const [ selectedCounterparties, setSelectedCounterparties ] = useState([]);
+  const { selectedCounterparties, setSelectedCounterparties, ...rest } = props;
+  const [ counterparties, setCounterparties ] = useState();
 
 
   useEffect(()=>{
@@ -42,7 +41,7 @@ const CounterpartyList = (props) => {
     }
   ]
 
-  return (
+  return counterparties? (
     <div className={classes.counterpartyList}>
       <DataGrid
         autoHeight
@@ -50,12 +49,13 @@ const CounterpartyList = (props) => {
         columns={columns}
         rows={counterparties}
         getRowId={(row) => row.symbol}
-        onSelectionModelChange={(val)=>setSelectedCounterparties(val)}
+        selectionModel={selectedCounterparties}
+        onSelectionModelChange={(val)=>{ console.log(val); setSelectedCounterparties(val)}}
         style={{width: 700}}
         {...rest}
       />
     </div>
-  )
+  ): null
 }
 
 export default CounterpartyList
