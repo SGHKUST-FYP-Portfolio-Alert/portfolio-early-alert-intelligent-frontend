@@ -16,12 +16,9 @@ const useStyles = makeStyles((theme) => ({
     companyName: {
       fontWeight: 'bold',
     },
-    dashboard: {
-      textAlign: 'center',
-      padding: theme.spacing(3),
-    },
     card: {
-      minWidth: '80%',
+      maxWidth: '80%',
+      width: 500,
       textAlign: 'left',
       marginRight: theme.spacing(3)
     },
@@ -56,8 +53,8 @@ const useStyles = makeStyles((theme) => ({
     },
     cardRow: {
       display: 'flex',
+      width: '100%',
       margin: 'auto',
-      maxWidth: 800,
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: colors.grey[100],
@@ -78,27 +75,27 @@ const AlertCard = (props) => {
     <Card
       className={classnames(
         classes.card,
-        item.type === 'alert'? classes.cardAlert :
-        item.type === 'warning'? classes.cardWarning : null
+        item.class === 'alert'? classes.cardAlert :
+        item.class === 'warning'? classes.cardWarning : null
       )}
     key={key}
     >
       <CardContent
-        onClick={()=>history.push("/counterparty?symbol="+item.company_id)}
+        onClick={()=>history.push("/counterparty?symbol="+item.counterparty)}
       >
         <div className={classes.Row}>
           <Typography variant="h6" className={classes.companyName}>
-            {item.company_name}
+            {item.counterparty}
           </Typography>
           <Typography color="textSecondary">
-            {item.type}
+            {item.date.substring(0, 10)}
           </Typography>
         </div>
         <Typography>
-          {item.content}
+          {item.type}
         </Typography>
         <div className={classes.keywordRow}>
-          {item.keywords.map((keyword, index) => (
+          {item?.keywords?.map((keyword, index) => (
             <Chip key={index} label={keyword}/>
           ))}
         </div>
