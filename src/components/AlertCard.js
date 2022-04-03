@@ -92,7 +92,7 @@ const AlertCard = (props) => {
           </Typography>
         </div>
         <Typography>
-          {item.type}
+          {item.type} by {Math.abs(item.value).toFixed(3)} (once per {Math.round(1/item.percentile)} days)
         </Typography>
         <div className={classes.keywordRow}>
           {item?.keywords?.map((keyword, index) => (
