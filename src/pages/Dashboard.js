@@ -25,7 +25,7 @@ const Dashboard = (props) => {
 
   useEffect(function(){
     axios.get(
-      serverURL + 'alert?date=' + selectedDate.toISOString().substring(0, 10)
+      serverURL + 'alert?detailed=true&date=' + selectedDate.toISOString().substring(0, 10)
     )
       .then((response)=>{
         setAlerts(response.data)

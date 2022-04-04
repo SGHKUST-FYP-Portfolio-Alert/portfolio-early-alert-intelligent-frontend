@@ -75,17 +75,18 @@ const AlertCard = (props) => {
     <Card
       className={classnames(
         classes.card,
-        item.class === 'alert'? classes.cardAlert :
-        item.class === 'warning'? classes.cardWarning : null
+        item.category === 'alert'? classes.cardAlert :
+        item.category === 'warning'? classes.cardWarning : null
       )}
     key={key}
     >
       <CardContent
-        onClick={()=>history.push("/counterparty?symbol="+item.counterparty)}
+        onClick={()=>history.push("/counterparty?symbol="+item.counterparty.symbol)}
       >
         <div className={classes.Row}>
           <Typography variant="h6" className={classes.companyName}>
-            {item.counterparty}
+            {/* {item.counterparty} */}
+            {item.counterparty.name} ({item.counterparty.symbol})
           </Typography>
           <Typography color="textSecondary">
             {item.date.substring(0, 10)}
