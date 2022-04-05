@@ -16,8 +16,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
   },
   headerContainer: {
-    width: 560,
-    maxWidth: '80%',
+    maxWidth: 560,
     margin: 'auto',
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
@@ -26,8 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardsContainer: {
     padding: theme.spacing(2),
-    width: 560,
-    maxWidth: '80%',
+    maxWidth: 560,
     margin: 'auto',
   }
 }));
