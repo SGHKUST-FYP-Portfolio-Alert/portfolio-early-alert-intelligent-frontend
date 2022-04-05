@@ -14,6 +14,7 @@ import { serverURL } from '../../constants'
 import Chart from './components/Chart';
 import { parseCalculationData, parsePriceData } from './components/chartHelper';
 import NewsList from './components/NewsList';
+import AlertList from './components/AlertList';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
@@ -59,6 +60,7 @@ const Counterparty = (props) => {
   const [ chartData, setChartData ] = useState({});
   
   const [ newsListParam, setNewsListParam ] = useState({page: 1})
+  const [ alertListParam, setAlertListParam ] = useState({page: 1})
 
   useEffect(()=>{
 
@@ -84,29 +86,6 @@ const Counterparty = (props) => {
       .catch((error)=> console.log("TODO error handling", error))
 
   }, []);
-
-
-
-  const getAlertListItem = (alertItem, index) => (
-    <ListItem key={index} className={classnames(classes.alertListItem, classes[alertItem.type])}>
-      <ListItemText
-        primary={alertItem.content}
-        secondary={
-          <React.Fragment>
-            <Typography
-              component="span"
-              variant="body2"
-              className={classes.inline}
-              color="textPrimary"
-            >
-              {alertItem.date} &emsp;-&emsp;
-            </Typography>
-            {alertItem.type}
-          </React.Fragment>
-        }
-      />
-    </ListItem>
-  );
 
 
   return (
@@ -135,12 +114,7 @@ const Counterparty = (props) => {
       </Button>
       {(chartData.price && chartData.calculation) && <Chart chartData={chartData} setNewsListParam={setNewsListParam}/>}
       <NewsList counterparty={counterparty} newsListParam={newsListParam} setNewsListParam={setNewsListParam}/>
-      <Typography variant="h6">
-        Past Alert
-      </Typography>
-      <List>
-        {data.alertHistory?.map((alertItem, index) => getAlertListItem(alertItem, index))}
-      </List>
+      <AlertList counterparty={counterparty} alertListParam={alertListParam} setNewsListParam={setAlertListParam}/>
     </div>
   )
 }

@@ -11,6 +11,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Autorenew } from '@material-ui/icons';
+import { generateAlertContent } from '../helper'
 
 const useStyles = makeStyles((theme) => ({
     companyName: {
@@ -93,7 +94,7 @@ const AlertCard = (props) => {
           </Typography>
         </div>
         <Typography>
-          {item.type} by {Math.abs(item.value).toFixed(3)} (once per {Math.round(1/item.percentile)} days)
+          {generateAlertContent(item)}
         </Typography>
         <div className={classes.keywordRow}>
           {item?.keywords?.map((keyword, index) => (
