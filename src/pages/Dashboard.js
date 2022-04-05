@@ -9,11 +9,27 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
+import { colors, Paper } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   dashboard: {
     textAlign: 'center',
   },
+  headerContainer: {
+    width: 560,
+    maxWidth: '80%',
+    margin: 'auto',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingBottom: theme.spacing(1),
+    marginBottom: theme.spacing(1)
+  },
+  cardsContainer: {
+    padding: theme.spacing(2),
+    width: 560,
+    maxWidth: '80%',
+    margin: 'auto',
+  }
 }));
 
 const Dashboard = (props) => {
@@ -38,6 +54,7 @@ const Dashboard = (props) => {
 
   return (
     <div className={classes.dashboard}>
+      <Paper className={classes.headerContainer}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <KeyboardDatePicker
           disableToolbar
@@ -53,9 +70,12 @@ const Dashboard = (props) => {
           }}
         />
       </MuiPickersUtilsProvider>
-      { alerts.map((item, index) =>
-        <AlertCard item={item} key={index}/>
-      )}
+      </Paper>
+      <Paper className={classes.cardsContainer}>
+        { alerts.map((item, index) =>
+          <AlertCard item={item} key={index}/>
+        )}
+      </Paper>
     </div>
   );
 }

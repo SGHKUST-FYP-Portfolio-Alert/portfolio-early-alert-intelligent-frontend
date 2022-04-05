@@ -4,5 +4,5 @@ export function title(string){
 }
 
 export function generateAlertContent(item){
-    return `${item.type} by ${Math.abs(item.value).toFixed(3)} (once per ${Math.round(1/item.percentile)} days)`
+    return `${item.type} by ${Math.abs(item.value).toFixed(3)} (once in ${Math.round(1/item.percentile)} days)`
 }

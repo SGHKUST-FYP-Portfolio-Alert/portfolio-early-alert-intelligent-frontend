@@ -9,6 +9,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import { TreeView, TreeItem } from '@material-ui/lab';
 import DragPanes from "highcharts/modules/drag-panes.js";
+import { withRouter } from 'react-router-dom';
+import classNames from 'classnames';
 
 var highcharts;
 
@@ -109,7 +111,7 @@ const SelectPopover = (props) => {
 
 const Chart = (props) => {
 
-  const { chartData, setNewsListParam } = props;
+  const { chartData, setNewsListParam, history, counterparty } = props;
 
   let series = [];
 
@@ -139,9 +141,16 @@ const Chart = (props) => {
 
   return (
     <>
-    <SelectPopover
-      series={series}
-    />
+      <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: 2}}>
+      <SelectPopover
+        series={series}
+      />
+      <Button variant="contained" size="small" 
+        onClick={()=>history.push(`/edit-topic?symbol=${counterparty}`)}
+      >
+        Add Keywords
+      </Button>
+    </div>
     <HighchartsReact
       highcharts={Highcharts}
       constructorType={'stockChart'}
@@ -151,4 +160,4 @@ const Chart = (props) => {
   )
 };
 
-export default memo(Chart)
+export default memo(withRouter(Chart))

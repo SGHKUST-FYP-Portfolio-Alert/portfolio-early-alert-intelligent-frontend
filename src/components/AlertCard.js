@@ -18,16 +18,26 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: 'bold',
     },
     card: {
-      maxWidth: '80%',
-      width: 500,
+      maxWidth: '100%',
+      width: 520,
       textAlign: 'left',
-      marginRight: theme.spacing(3)
+      display: 'flex',
+      justifyContent: 'space-between',
+      margin: 'auto',
+      border: '1px solid',
+      marginBottom: theme.spacing(1.5)
     },
     cardAlert: {
-      backgroundColor: colors.red[400],
+      backgroundColor: colors.red[200],
+      //color: colors.red[900],
+      borderColor: colors.red[500]
     },
     cardWarning: {
       backgroundColor: colors.amber[400],
+    },
+    cardReminder: {
+      backgroundColor: colors.green[200],
+      borderColor: colors.green[500]
     },
     keywordRow: {
       '& > *': {
@@ -35,15 +45,13 @@ const useStyles = makeStyles((theme) => ({
       }
     },
     feedbackRow: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      backgroundColor: colors.grey[100],
+      backgroundColor: colors.grey[200],
       color: colors.grey[600],
-      paddingTop: theme.spacing(1),
-      paddingBottom: `${theme.spacing(1)}px !important`
+      padding: theme.spacing(1),
     },
     feedbackButtonContainer: {
-      display: 'flex'
+      display: 'flex',
+      flexDirection: 'column'
     },
     iconButton: {
       padding: 0
@@ -52,18 +60,12 @@ const useStyles = makeStyles((theme) => ({
       display: 'flex',
       justifyContent: 'space-between'
     },
-    cardRow: {
-      display: 'flex',
-      width: '100%',
-      margin: 'auto',
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: colors.grey[100],
-      marginBottom: theme.spacing(1)
-    },
     menuIcon: {
       color: colors.grey[600]
     },
+    content: {
+      flexGrow: 1
+    }
 }));
 
 const AlertCard = (props) => {
@@ -72,17 +74,19 @@ const AlertCard = (props) => {
   const { history, item, key } = props;
 
   return (
-  <div className={classes.cardRow}>
     <Card
+      elevation={2}
       className={classnames(
         classes.card,
         item.category === 'alert'? classes.cardAlert :
-        item.category === 'warning'? classes.cardWarning : null
+        item.category === 'warning'? classes.cardWarning : 
+        item.category === 'reminder'? classes.cardReminder : null
       )}
     key={key}
     >
       <CardContent
         onClick={()=>history.push("/counterparty?symbol="+item.counterparty.symbol)}
+        className={classes.content}
       >
         <div className={classes.Row}>
           <Typography variant="h6" className={classes.companyName}>
@@ -103,9 +107,6 @@ const AlertCard = (props) => {
         </div>
       </CardContent>
       <CardContent className={classes.feedbackRow}>
-        <Typography>
-          Is this correct?
-        </Typography>
         <div className={classes.feedbackButtonContainer}>
           <IconButton className={classes.iconButton} onClick={()=>{console.log('here')}}>
             <CheckCircleIcon/>
@@ -116,8 +117,6 @@ const AlertCard = (props) => {
         </div>
       </CardContent>
     </Card>
-    <MenuIcon className={classes.menuIcon}/>
-  </div>
   )
 
 }

@@ -14,7 +14,7 @@ import { title, generateAlertContent } from '../../../helper.js'
 const useStyles = makeStyles((theme) => ({
   headerRow: {
     display: 'flex',
-    marginTop: theme.spacing(1),
+    paddingLeft: theme.spacing(1),
     '& > *': {
       marginRight: theme.spacing(5)
     }

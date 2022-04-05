@@ -10,11 +10,13 @@ import { useState, useEffect } from "react";
 const useStyles = makeStyles((theme) => ({
   counterpartyList: {
     textAlign: 'center',
+    padding: theme.padding
   },
   buttonRow: {
     textAlign: 'left',
+    marginBottom: theme.spacing(1),
     '& > *': {
-      margin: theme.spacing(1),
+      marginRight: theme.spacing(1),
     }
   }
 }));

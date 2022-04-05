@@ -33,12 +33,12 @@ const theme = createTheme({
     secondary: {
       main: '#E9041E'
     },
-  },
+  }
 });
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex'
+    display: 'flex',
   },
   appBar: {
     zIndex: 1201,
@@ -51,7 +51,9 @@ const useStyles = makeStyles((theme) => ({
   },
   page: {
     flexGrow: 1,
-    padding: theme.spacing(2)
+    backgroundColor: colors.grey[100],
+    padding: theme.spacing(2),
+    minHeight: `calc(100vh - ${theme.spacing(4)}px)`
   }, 
   menuButton: {
     [theme.breakpoints.up('sm')]: {

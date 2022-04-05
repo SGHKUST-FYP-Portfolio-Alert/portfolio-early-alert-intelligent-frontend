@@ -1,5 +1,5 @@
 import React from 'react';
-import { colors } from '@material-ui/core';
+import { colors, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { withRouter } from 'react-router-dom';
@@ -18,6 +18,8 @@ import AlertList from './components/AlertList';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
+  counterparty: {
+  },
   currentRow: {
     display: 'flex',
     marginBottom: theme.spacing(1),
@@ -45,6 +47,10 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     marginRight: theme.spacing(1)
+  },
+  paper: {
+    padding: theme.spacing(1),
+    marginBottom: theme.spacing(1.5)
   }
 }));
 
@@ -114,14 +120,15 @@ const Counterparty = (props) => {
           )}
         </div>
       </div>
-      <Button variant="contained" size="small" className={classes.button}
-        onClick={()=>history.push(`/edit-topic?symbol=${counterparty}`)}
-      >
-        Edit Keywords
-      </Button>
-      {(chartData.price && chartData.calculation) && <Chart chartData={chartData} setNewsListParam={setNewsListParam}/>}
-      <NewsList counterparty={counterparty} newsListParam={newsListParam} setNewsListParam={setNewsListParam}/>
-      <AlertList data={data.alert}/>
+      <Paper className={classes.paper}>
+        {(chartData.price && chartData.calculation) && <Chart chartData={chartData} setNewsListParam={setNewsListParam} counterparty={counterparty}/>}
+      </Paper>
+      <Paper className={classes.paper}>
+        <NewsList counterparty={counterparty} newsListParam={newsListParam} setNewsListParam={setNewsListParam}/>
+      </Paper>
+      <Paper className={classes.paper}>
+        <AlertList data={data.alert}/>
+      </Paper>
     </div>
   )
 }
