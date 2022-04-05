@@ -93,23 +93,14 @@ const AlertListItem = ({alertItem}) => {
 
 const AlertList = (props) => {
 
-  const { counterparty, alertListParam, setAlertListParam } = props
-  const [ data, setData ] = useState([]);
+  const { data } = props
 
-  const { page, date } = alertListParam;
+  //const { page, date } = alertListParam;
 
   const classes = useStyles();
 
-  useEffect(function(){
-    axios.get(serverURL + `alert?counterparty=${counterparty}&limit=5&skip=${(page-1)*5}`+ (date? `&date=${date}` : '') )
-      .then((response)=>{
-        setData(response.data)
-      })
-      .catch((error)=> console.log("TODO error handling", error))
-  }, [page, date])
-
   function handlePageChange(evt, page){
-    setAlertListParam({...alertListParam, page})
+    //setAlertListParam({...alertListParam, page})
   }
 
   return (
@@ -118,10 +109,10 @@ const AlertList = (props) => {
       <Typography variant="h6">
           Past Alerts
       </Typography>
-      <Pagination count={5} page={page} onChange={handlePageChange}/>
+      <Pagination count={5} page={1}/>
     </div>
     <List>
-      {data.map((alertItem, index) => <AlertListItem alertItem={alertItem} key={index}/>)}
+      {data?.map((alertItem, index) => <AlertListItem alertItem={alertItem} key={index}/>)}
     </List>
   </div>
   )

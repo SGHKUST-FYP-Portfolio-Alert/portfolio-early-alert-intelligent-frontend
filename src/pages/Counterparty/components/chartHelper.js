@@ -1,4 +1,5 @@
-import { calculationDataConfig, priceDataConfig } from "./chartConfig";
+import { Flag } from "@material-ui/icons";
+import { calculationDataConfig, priceDataConfig, alertDataConfig } from "./chartConfig";
 
 function parseData(input, config){
 
@@ -25,6 +26,18 @@ export function parseCalculationData(input){
 
 export function parsePriceData(input){
   return parseData(input, priceDataConfig)
+}
+
+export function parseAlertData(input){
+  return {
+    ...alertDataConfig,
+    data: input.map((alert)=>({
+      x: Date.parse(alert.date.substring(0, 10)),
+      title: alert.category,
+      text: alert.type
+    }))
+
+  }
 }
 
 export function seriesToGrouped(series){

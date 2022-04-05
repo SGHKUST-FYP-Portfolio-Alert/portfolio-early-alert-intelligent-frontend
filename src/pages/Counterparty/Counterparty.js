@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { serverURL } from '../../constants'
 import Chart from './components/Chart';
-import { parseCalculationData, parsePriceData } from './components/chartHelper';
+import { parseCalculationData, parsePriceData, parseAlertData } from './components/chartHelper';
 import NewsList from './components/NewsList';
 import AlertList from './components/AlertList';
 import Button from '@material-ui/core/Button';
@@ -84,6 +84,13 @@ const Counterparty = (props) => {
         setChartData(prevState => ({...prevState, price: parsePriceData(response.data)}))
       })
       .catch((error)=> console.log("TODO error handling", error))
+    
+    axios.get(serverURL + `alert?counterparty=${counterparty}`)
+      .then((response)=>{
+        setData(prevState =>({...prevState, alert: response.data}));
+        setChartData(prevState => ({...prevState, alert: parseAlertData(response.data)}))
+      })
+      .catch((error)=> console.log("TODO error handling", error))
 
   }, []);
 
@@ -114,7 +121,7 @@ const Counterparty = (props) => {
       </Button>
       {(chartData.price && chartData.calculation) && <Chart chartData={chartData} setNewsListParam={setNewsListParam}/>}
       <NewsList counterparty={counterparty} newsListParam={newsListParam} setNewsListParam={setNewsListParam}/>
-      <AlertList counterparty={counterparty} alertListParam={alertListParam} setNewsListParam={setAlertListParam}/>
+      <AlertList data={data.alert}/>
     </div>
   )
 }

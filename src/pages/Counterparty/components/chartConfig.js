@@ -13,6 +13,7 @@ export const calculationDataConfig = [
     yAxis: 'news_count'
   },
   {
+    id: 'sentiment_wma',
     name: 'Sentiment WMA',
     key: 'sentiments.rolling_avg',
     group: 'Sentiments',
@@ -74,6 +75,12 @@ export const priceDataConfig = [
     yAxis: 'price'
   }
 ]
+
+export const alertDataConfig = {
+  type: 'flags',
+  shape: 'circlepin',
+  width: 20
+}
 
 export const chartOptions = {
   rangeSelector: {
