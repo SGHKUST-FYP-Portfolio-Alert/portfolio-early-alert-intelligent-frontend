@@ -35,7 +35,7 @@ export function parseAlertData(input){
       x: Date.parse(alert.date.substring(0, 10)),
       title: alert.category,
       text: alert.type
-    }))
+    })).reverse()
 
   }
 }

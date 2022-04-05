@@ -160,4 +160,8 @@ const Chart = (props) => {
   )
 };
 
-export default memo(withRouter(Chart))
+function propsAreEqualBasedOnPathname(prevProps, nextProps) {
+  return prevProps.location.pathname == nextProps.location.pathname;
+}
+
+export default withRouter(memo(Chart, propsAreEqualBasedOnPathname))
