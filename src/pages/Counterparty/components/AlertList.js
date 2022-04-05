@@ -95,12 +95,13 @@ const AlertList = (props) => {
 
   const { data } = props
 
-  //const { page, date } = alertListParam;
+  const [ page, setPage ] = useState(1);
+  const pageCount = Math.ceil((data?.length || 0)/ 5)
 
   const classes = useStyles();
 
   function handlePageChange(evt, page){
-    //setAlertListParam({...alertListParam, page})
+    setPage(page)
   }
 
   return (
@@ -109,10 +110,11 @@ const AlertList = (props) => {
       <Typography variant="h6">
           Past Alerts
       </Typography>
-      <Pagination count={5} page={1}/>
+      <Pagination count={pageCount} page={page} onChange={handlePageChange}/>
     </div>
     <List>
-      {data?.map((alertItem, index) => <AlertListItem alertItem={alertItem} key={index}/>)}
+      {data?.slice((page -1) *5, Math.min(page*5, data?.length))
+        ?.map((alertItem, index) => <AlertListItem alertItem={alertItem} key={index}/>)}
     </List>
   </div>
   )
