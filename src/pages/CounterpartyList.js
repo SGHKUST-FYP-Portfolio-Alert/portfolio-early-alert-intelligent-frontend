@@ -5,6 +5,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { serverURL } from '../constants'
 import { useState, useEffect } from "react";
+import { Chip } from "@material-ui/core";
+import { getSentimentColor } from "../helper";
+import CircularBarWithLabel from "../components/CircularBarWithLabel";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -24,8 +27,12 @@ const CounterpartyList = (props) => {
 
   const classes = useStyles();
   const { history } = props;
-  const [ counterparties, setCounterparties ] = useState([]);
+  const [ data, setData ] = useState([]);
   const [ selectedCounterparties, setSelectedCounterparties ] = useState([]);
+  const counterparties = data.map(c => ({
+    sentiment: c?.data?.sentiments?.rolling_avg,
+    ...c
+  }))
 
   function handleDeleteCounterparties(){
     const promises = selectedCounterparties.map(
@@ -37,9 +44,9 @@ const CounterpartyList = (props) => {
   }
 
   useEffect(()=>{
-    axios.get(serverURL + 'counterparty')
+    axios.get(serverURL + 'counterparty?detailed=true')
       .then((response)=>{
-        setCounterparties(response.data)
+        setData(response.data)
       })
       .catch((error)=>{
         console.log("TODO error catching")
@@ -50,12 +57,23 @@ const CounterpartyList = (props) => {
     {
       field: 'symbol',
       headerName: 'Symbol',
-      width: 130
+      width: 120
     },
     {
       field: 'name',
       headerName: 'Counterparty Name',
-      width: 500
+      width: 300
+    },
+    {
+      field: 'sentiment',
+      headerName: 'Sentiment',
+      renderCell: (params) => 
+        <CircularBarWithLabel
+          max={1} min={-1} 
+          color={getSentimentColor(params.value)} 
+          value={params.value}
+        />,
+      width: 150
     }
   ]
 
@@ -81,6 +99,7 @@ const CounterpartyList = (props) => {
         getRowId={(row) => row.symbol}
         onRowClick={({row})=>history.push("/counterparty?symbol="+row.symbol)}
         onSelectionModelChange={(val)=>setSelectedCounterparties(val)}
+        pageSize={50}
       />
     </div>
   )

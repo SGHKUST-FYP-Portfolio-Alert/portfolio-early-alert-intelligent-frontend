@@ -70,9 +70,9 @@ const Counterparty = (props) => {
 
   useEffect(()=>{
 
-    axios.get(serverURL + `counterparty/?symbol=${counterparty}`)
+    axios.get(serverURL + `counterparty?symbol=${counterparty}&detailed`)
     .then((response)=>{
-      setData(prevState =>({...prevState, counterpartyInfo: response.data}))
+      setData(prevState =>({...prevState, counterpartyInfo: response.data[0]}))
     })
     .catch((error)=> console.log("TODO error handling", error))
 
