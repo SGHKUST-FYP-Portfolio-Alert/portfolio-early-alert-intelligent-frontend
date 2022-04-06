@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { serverURL } from '../constants'
 import { useState, useEffect } from "react";
-import { Chip } from "@material-ui/core";
+import { Chip, CircularProgress } from "@material-ui/core";
 import { getSentimentColor } from "../helper";
 import CircularBarWithLabel from "../components/CircularBarWithLabel";
 
@@ -91,16 +91,19 @@ const CounterpartyList = (props) => {
           Delete
         </Button>
       </div>
-      <DataGrid
-        autoHeight
-        checkboxSelection
-        columns={columns}
-        rows={counterparties}
-        getRowId={(row) => row.symbol}
-        onRowClick={({row})=>history.push("/counterparty?symbol="+row.symbol)}
-        onSelectionModelChange={(val)=>setSelectedCounterparties(val)}
-        pageSize={50}
-      />
+      { data.length > 0 ?
+        <DataGrid
+          autoHeight
+          checkboxSelection
+          columns={columns}
+          rows={counterparties}
+          getRowId={(row) => row.symbol}
+          onRowClick={({row})=>history.push("/counterparty?symbol="+row.symbol)}
+          onSelectionModelChange={(val)=>setSelectedCounterparties(val)}
+          pageSize={50}
+        /> :
+        <CircularProgress/>
+      }
     </div>
   )
 }
