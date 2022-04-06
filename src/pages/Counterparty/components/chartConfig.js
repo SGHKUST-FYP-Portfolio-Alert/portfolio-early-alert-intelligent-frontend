@@ -77,6 +77,8 @@ export const priceDataConfig = [
 ]
 
 export const alertDataConfig = {
+  key: 'alert',
+  name: 'Alerts',
   type: 'flags',
   shape: 'circlepin',
   width: 20

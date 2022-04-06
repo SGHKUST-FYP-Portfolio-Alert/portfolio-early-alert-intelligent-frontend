@@ -15,7 +15,8 @@ import Chart from './components/Chart';
 import { parseCalculationData, parsePriceData, parseAlertData } from './components/chartHelper';
 import NewsList from './components/NewsList';
 import AlertList from './components/AlertList';
-import Button from '@material-ui/core/Button';
+import CircularBarWithLabel from '../../components/CircularBarWithLabel';
+import { getSentimentColor } from '../../helper';
 
 const useStyles = makeStyles((theme) => ({
   counterparty: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     '& > *': {
       display: 'inline-flex',
-      marginRight: theme.spacing(3),
+      marginRight: theme.spacing(0.5),
     }
   },
   title: {
@@ -51,6 +52,9 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(1),
     marginBottom: theme.spacing(1.5)
+  },
+  marginLeft:{
+    marginLeft: theme.spacing(1)
   }
 }));
 
@@ -66,11 +70,10 @@ const Counterparty = (props) => {
   const [ chartData, setChartData ] = useState({});
   
   const [ newsListParam, setNewsListParam ] = useState({page: 1})
-  const [ alertListParam, setAlertListParam ] = useState({page: 1})
 
   useEffect(()=>{
 
-    axios.get(serverURL + `counterparty?symbol=${counterparty}&detailed`)
+    axios.get(serverURL + `counterparty?symbol=${counterparty}&detailed=true`)
     .then((response)=>{
       setData(prevState =>({...prevState, counterpartyInfo: response.data[0]}))
     })
@@ -79,14 +82,12 @@ const Counterparty = (props) => {
     
     axios.get(serverURL + `chart/calculation?counterparty=${counterparty}`)
       .then((response)=>{
-        setData(prevState =>({...prevState, calculation: response.data}))
         setChartData(prevState => ({...prevState, calculation: parseCalculationData(response.data)}))
       })
       .catch((error)=> console.log("TODO error handling", error))
 
     axios.get(serverURL + `chart/price?counterparty=${counterparty}`)
       .then((response)=>{
-        setData(prevState =>({...prevState, price: response.data}));
         setChartData(prevState => ({...prevState, price: parsePriceData(response.data)}))
       })
       .catch((error)=> console.log("TODO error handling", error))
@@ -108,16 +109,21 @@ const Counterparty = (props) => {
           {counterparty} - {data.counterpartyInfo?.name}
         </Typography>
         <Typography>
-          Current:
+          Sentiment:
         </Typography>
-        {/* <Chip className={classes.currentRowItem} label={data.sentimentHistory?.[data.sentimentHistory.length - 1]?.average_score.toFixed(2)} color='secondary'/> */}
-        <Typography>
+        <CircularBarWithLabel
+          max={1} min={-1} 
+          color={getSentimentColor(data?.counterpartyInfo?.data?.sentiments?.rolling_avg)} 
+          value={data?.counterpartyInfo?.data?.sentiments?.rolling_avg}
+        />
+        <Typography className={classes.marginLeft}>
           Keywords:
         </Typography>
         <div className={classes.currentRowItem}>
-          {data.sentimentHistory?.[data.sentimentHistory.length - 1]?.keywords?.map(
-            (keyword, index) => <Chip label={keyword} key={index}/>
-          )}
+          {Object.entries(data?.counterpartyInfo?.data?.keyword_count||{})
+            .sort((a, b)=> a[1] < b[1]).slice(0, 4)
+            .map(([k, v]) => <Chip size='small' label={k} />)
+          }
         </div>
       </div>
       <Paper className={classes.paper}>

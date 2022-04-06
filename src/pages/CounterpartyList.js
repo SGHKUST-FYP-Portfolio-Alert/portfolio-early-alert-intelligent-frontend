@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { serverURL } from '../constants'
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Chip, CircularProgress } from "@material-ui/core";
 import { getSentimentColor } from "../helper";
 import CircularBarWithLabel from "../components/CircularBarWithLabel";
@@ -31,6 +31,7 @@ const CounterpartyList = (props) => {
   const [ selectedCounterparties, setSelectedCounterparties ] = useState([]);
   const counterparties = data.map(c => ({
     sentiment: c?.data?.sentiments?.rolling_avg,
+    keywords: c?.data?.keyword_count,
     ...c
   }))
 
@@ -57,12 +58,12 @@ const CounterpartyList = (props) => {
     {
       field: 'symbol',
       headerName: 'Symbol',
-      width: 120
+      width: 100
     },
     {
       field: 'name',
       headerName: 'Counterparty Name',
-      width: 300
+      width: 250
     },
     {
       field: 'sentiment',
@@ -73,7 +74,18 @@ const CounterpartyList = (props) => {
           color={getSentimentColor(params.value)} 
           value={params.value}
         />,
-      width: 150
+      width: 120
+    },
+    {
+      field: 'keywords',
+      headerName: 'Keywords',
+      width: 300,
+      renderCell: (params) => 
+        <React.Fragment>
+          {Object.entries(params.value || {}).sort((a, b)=> a[1] < b[1]).slice(0, 4).map(
+            ([k, v]) => <Chip size='small' label={k} />
+          )}
+        </React.Fragment>
     }
   ]
 
