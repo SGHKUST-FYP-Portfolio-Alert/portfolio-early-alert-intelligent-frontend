@@ -79,8 +79,8 @@ const Dashboard = (props) => {
       </MuiPickersUtilsProvider>
       </Paper>
       <Paper className={classes.cardsContainer}>
-        { alerts.map((item, index) =>
-          <AlertCard item={item} key={index} showDismissed={showDismissed}/>
+        { alerts.map((item) =>
+          <AlertCard item={item} key={item.id} showDismissed={showDismissed}/>
         )}
       </Paper>
     </div>

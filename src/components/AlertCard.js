@@ -94,7 +94,7 @@ const AlertCard = (props) => {
     setFeedback(feedback)
   }
 
-  if (showDismissed || feedback)
+  if (showDismissed || feedback !== false)
   return (
     <Card
       elevation={2}
