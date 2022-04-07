@@ -11,9 +11,11 @@ export const calculationDataConfig = [
     name: 'News Count',
     key: 'news_count',
     zIndex: 1,
+    defaultValue: 0,
     color: '#000000',
     yAxis: 'news_count',
-    legendIndex: 1
+    legendIndex: 3,
+    showInNavigator: true,
   },
   {
     id: 'sentiment_wma',
@@ -23,7 +25,8 @@ export const calculationDataConfig = [
     group: 'Sentiments',
     yAxis: 'sentiment_score',
     tooltip: { valueDecimals: 2},
-    legendIndex: 0
+    legendIndex: 0,
+    showInNavigator: true,
   },
   {
     name: 'Positive',
@@ -35,6 +38,7 @@ export const calculationDataConfig = [
     type: 'area',
     yAxis: 'sentiments',
     tooltip: sentimentTooltipConfig,
+    legendIndex: 3,
   },
   {
     name: 'Neutral',
@@ -46,7 +50,8 @@ export const calculationDataConfig = [
     type: 'area',
     yAxis: 'sentiments',
     tooltip: sentimentTooltipConfig,
-    visible: false
+    visible: false,
+    legendIndex: 4,
   },
   {
     name: 'Negative',
@@ -57,7 +62,8 @@ export const calculationDataConfig = [
     type: 'area',
     color: '#ff6666' ,
     yAxis: 'sentiments',
-    tooltip: sentimentTooltipConfig
+    tooltip: sentimentTooltipConfig,
+    legendIndex: 5,
   },
   ...keywords.map(keyword => ({
     name: keyword,
@@ -71,14 +77,27 @@ export const calculationDataConfig = [
 
 export const priceDataConfig = [
   {
-    name: 'Price',
-    showInLegend: false,
+    name: 'Candlestick',
     type: 'hollowcandlestick',
+    key: 'price',
+    group: 'Price',
+    compare: 'percent',
+    tooltip: {
+      valueDecimals: 2,
+    },
+    legendIndex: 1,
+    yAxis: 'price'
+  }, {
+    name: 'Close',
+    color: colors.grey[900],
+    lineWidth: 0.5,
+    group: 'Price',
     key: 'price',
     compare: 'percent',
     tooltip: {
       valueDecimals: 2,
     },
+    legendIndex: 2,
     yAxis: 'price'
   }
 ]
@@ -176,7 +195,12 @@ export const chartOptions = {
       dataGrouping: {groupPixelWidth: 25}
     },
     series: {
-        showInNavigator: true,
+      dataGrouping: {
+        units: [
+          ['day', [1, 2, 3]], 
+          ['week', [1]]
+        ]
+      }
     },
   },
   chart: {

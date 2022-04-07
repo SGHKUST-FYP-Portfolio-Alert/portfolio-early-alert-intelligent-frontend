@@ -7,17 +7,20 @@ function parseData(input, config){
   
   const datetime = input.map(obj => Date.parse(obj.date));
 
-  return config.map(function({key,defaultValue, ...rest}){
+  return config.map(function({key,defaultValue, type, ...rest}){
     const path = key.split('.');
     const data = input.map((obj, idx) => {
       let value = path.reduce((prev, curr)=> prev?.[curr], obj) || defaultValue
       if (Array.isArray(value))
-        return [datetime[idx], ...value];
+        return type === 'hollowcandlestick'? 
+          [datetime[idx], ...value] :
+          [datetime[idx], value[value.length - 1]];
       else return [datetime[idx], value]
     }).filter(([_, value]) => value != undefined);
     return {
       data,
       key,
+      type,
       ...rest
     };
   });
