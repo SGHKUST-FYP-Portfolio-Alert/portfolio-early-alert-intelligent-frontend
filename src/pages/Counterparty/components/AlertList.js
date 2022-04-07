@@ -48,34 +48,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const chipUseStyles = makeStyles((theme) => ({
-  positive: {
-    backgroundColor: colors.positive
-  },
-  neutral: {
-    backgroundColor: colors.neutral
-  },
-  negative: {
-    backgroundColor: colors.negative
-  }
-}));
-
-const SentimentChip = ({sentiment}) => {
-
-  const classes = chipUseStyles();
-
-  const numericToText = {
-    '-1': 'negative',
-    '0': 'neutral',
-    '1': 'positive'
-  }
-
-  const sentimentText = numericToText[sentiment]
-
-  return <Chip label={sentimentText} className={classes[sentimentText]} size="small"/>
-
-}
-
 const AlertListItem = ({alertItem}) => {
 
   const classes = useStyles();
@@ -85,7 +57,7 @@ const AlertListItem = ({alertItem}) => {
     <div>
       <Typography className={classes.listTitle}>{title(alertItem.type)}</Typography>
       <Typography variant="subtitle2">{title(alertItem.category)} - {alertItem.date.substring(0, 10)}</Typography>
-    <Typography variant="body2" className={classes.bodyText}>{generateAlertContent(alertItem)}</Typography>
+      <Typography variant="body2" className={classes.bodyText}>{generateAlertContent(alertItem)}</Typography>
     </div>
   </ListItem>
   )

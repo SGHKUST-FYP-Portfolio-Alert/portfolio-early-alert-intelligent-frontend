@@ -12,6 +12,8 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Autorenew } from '@material-ui/icons';
 import { generateAlertContent } from '../helper'
+import axios from 'axios';
+import { serverURL } from '../constants';
 
 const useStyles = makeStyles((theme) => ({
     companyName: {
@@ -54,7 +56,14 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column'
     },
     iconButton: {
-      padding: 0
+      padding: 0,
+      color: colors.grey[400],
+      '&:hover':{
+        color: colors.grey[600]
+      }
+    },
+    iconButtonActive: {
+      color: colors.grey[600]
     },
     Row: {
       display: 'flex',
@@ -72,6 +81,12 @@ const AlertCard = (props) => {
 
   const classes = useStyles();
   const { history, item, key } = props;
+
+  function submitFeedback(id, feedback){
+    axios.put( serverURL+'alert?id='+id, {
+      feedback: feedback
+    })
+  }
 
   return (
     <Card
@@ -108,10 +123,10 @@ const AlertCard = (props) => {
       </CardContent>
       <CardContent className={classes.feedbackRow}>
         <div className={classes.feedbackButtonContainer}>
-          <IconButton className={classes.iconButton} onClick={()=>{console.log('here')}}>
+          <IconButton className={[classes.iconButton, item.feedback? classes.iconButtonActive: null]} onClick={()=>submitFeedback(item.id, true)}>
             <CheckCircleIcon/>
           </IconButton>
-          <IconButton className={classes.iconButton} onClick={()=>{}}>
+          <IconButton className={[classes.iconButton, item.feedback === false? classes.iconButtonActive: null]} onClick={()=>submitFeedback(item.id, false)}>
           <CancelIcon/>
           </IconButton>
         </div>

@@ -1,11 +1,11 @@
 import { Checkbox, FormControlLabel } from "@material-ui/core";
 
 const CheckboxWithLabel = (props) => {
-  const { name, ...rest } = props;
+  const { label, ...rest } = props;
 
   return (
     <FormControlLabel 
-      label={name}
+      label={label}
       control={<Checkbox onClick={(evt)=>{evt.preventDefault()}} {...rest}/>}
     />
   );

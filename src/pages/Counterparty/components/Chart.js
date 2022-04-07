@@ -61,7 +61,7 @@ const SelectPopover = (props) => {
 
       return (
       <CheckboxWithLabel
-        name={serie.name}
+        label={serie.name}
         checked={serie.items?.map(i=> checked[i.key])?.every(Boolean) || checked[serie.key]}
         indeterminate={serie.items?.map(i=> checked[i.key])?.some(Boolean) && !serie.items?.map(i=> checked[i.key])?.every(Boolean)}
         onChange={(evt)=>{handleChange(evt, serie.items?.map(i=>i.key) || [serie.key])}}

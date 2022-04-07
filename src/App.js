@@ -15,6 +15,7 @@ import NewCounterparty from './pages/NewCounterparty';
 import EditTopic from './pages/EditTopic';
 import { useState } from 'react';
 import Fab from '@material-ui/core/Fab';
+import { CssBaseline } from '@material-ui/core';
 
 import {
   BrowserRouter,
@@ -27,6 +28,9 @@ import { colors } from '@material-ui/core';
 
 const theme = createTheme({
   palette: {
+    background: {
+      default: colors.grey[100],
+    },
     primary: {
       main: '#000'
     },
@@ -51,9 +55,7 @@ const useStyles = makeStyles((theme) => ({
   },
   page: {
     flexGrow: 1,
-    backgroundColor: colors.grey[100],
-    padding: theme.spacing(2),
-    minHeight: `calc(100vh - ${theme.spacing(4)}px)`
+    padding: theme.spacing(2)
   }, 
   menuButton: {
     [theme.breakpoints.up('sm')]: {
@@ -80,6 +82,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <BrowserRouter>
         <div className={classes.root}>
           <Sidebar mobileSidebarOpen={mobileSidebarOpen} setMobileSidebarOpen={setMobileSidebarOpen}/>
