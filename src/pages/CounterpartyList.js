@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {
       marginRight: theme.spacing(1),
     }
+  },
+  keywordChips: {
+    marginRight: theme.spacing(0.5)
   }
 }));
 
@@ -75,7 +78,7 @@ const CounterpartyList = (props) => {
           color={getSentimentColor(params.value)} 
           value={params.value}
         />,
-      width: 120
+      width: 100
     },
     {
       field: 'keywords',
@@ -84,7 +87,7 @@ const CounterpartyList = (props) => {
       renderCell: (params) => 
         <React.Fragment>
           {Object.entries(params.value || {}).sort((a, b)=> a[1] < b[1]).slice(0, 4).map(
-            ([k, v]) => <Chip size='small' label={k} />
+            ([k, v]) => <Chip size='small' className={classes.keywordChips} label={k} />
           )}
         </React.Fragment>
     }

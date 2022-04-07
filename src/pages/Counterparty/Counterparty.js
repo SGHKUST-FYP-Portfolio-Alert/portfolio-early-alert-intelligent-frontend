@@ -55,6 +55,14 @@ const useStyles = makeStyles((theme) => ({
   },
   marginLeft:{
     marginLeft: theme.spacing(1)
+  },
+  keywordChipsContainer: {
+    '& > *': {
+      marginRight: theme.spacing(0.5),
+      '&:last-child': {
+        marginRight: 0
+      }
+    },
   }
 }));
 
@@ -119,7 +127,7 @@ const Counterparty = (props) => {
         <Typography className={classes.marginLeft}>
           Keywords:
         </Typography>
-        <div className={classes.currentRowItem}>
+        <div className={classes.keywordChipsContainer}>
           {Object.entries(data?.counterpartyInfo?.data?.keyword_count||{})
             .sort((a, b)=> a[1] < b[1]).slice(0, 4)
             .map(([k, v]) => <Chip size='small' label={k} />)
