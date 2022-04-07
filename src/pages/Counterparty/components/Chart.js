@@ -9,6 +9,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import { TreeView, TreeItem } from '@material-ui/lab';
 import DragPanes from "highcharts/modules/drag-panes.js";
+import HollowCandlestick from "highcharts/modules/hollowcandlestick"
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 
@@ -138,6 +139,7 @@ const Chart = (props) => {
   };
 
   DragPanes(Highcharts);
+  HollowCandlestick(Highcharts);
 
   return (
     <>

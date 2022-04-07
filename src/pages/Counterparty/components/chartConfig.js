@@ -1,3 +1,5 @@
+import { colors } from "@material-ui/core";
+
 export const keywords = ["Ownership change", "Change of control", "Acceleration", "accelerate", "Default", "Insolvency", "Insolvent", "Delay", "Late", "Failure", "fail", "Dispute", "Liquidation", "Liquidator", "Margin call", "Haircut", "Bank run", "Termination", "Moratorium", "Suspension", "Suspend", "Fraud", "misrepresentation", "Fine", "sanction", "Breach", "Reschedule", "Restructuring", "Restructure", "Credit event", "Losses", "Loss", "Bailout", "Bailin", "Bankrupt", "Receivership", "Receiver", "Judicial Management", "Judicial Manager", "Administration", "Administrator", "Sequestrate", "Sequestration", "Support", "Capital call", "Liquidity event", "Negative trends", "Price changes", "Board infighting", "Corruption", "Inappropriate or ultra vires dealings", "Negative working capital", "Acquisition", "LBO", "Qualified audit opinion", "Regulatory breach", "Non-performing assets", "Provisions", "Force majeur", "Distress", "Frozen", "Delisted", "Sued", "Suit", "Arrested", "Disappeared", "Uncontactable"];
 
 const sentimentTooltipConfig = {
@@ -10,15 +12,18 @@ export const calculationDataConfig = [
     key: 'news_count',
     zIndex: 1,
     color: '#000000',
-    yAxis: 'news_count'
+    yAxis: 'news_count',
+    legendIndex: 1
   },
   {
     id: 'sentiment_wma',
-    name: 'Sentiment WMA',
+    color: colors.blue[500],
+    name: 'Sentiment Score',
     key: 'sentiments.rolling_avg',
     group: 'Sentiments',
     yAxis: 'sentiment_score',
-    tooltip: { valueDecimals: 2}
+    tooltip: { valueDecimals: 2},
+    legendIndex: 0
   },
   {
     name: 'Positive',
@@ -29,7 +34,7 @@ export const calculationDataConfig = [
     color: '#66ff66',
     type: 'area',
     yAxis: 'sentiments',
-    tooltip: sentimentTooltipConfig
+    tooltip: sentimentTooltipConfig,
   },
   {
     name: 'Neutral',
@@ -59,17 +64,19 @@ export const calculationDataConfig = [
     key: 'keyword_count.'+ keyword.toLowerCase(),
     type: 'column',
     group: 'Keywords',  
-    yAxis: 'keywords'
+    yAxis: 'keywords',
+    showInLegend: false
   }))
 ];
 
 export const priceDataConfig = [
   {
     name: 'Price',
-    key: 'Close',
+    showInLegend: false,
+    type: 'hollowcandlestick',
+    key: 'price',
     compare: 'percent',
     tooltip: {
-      pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
       valueDecimals: 2,
     },
     yAxis: 'price'
@@ -81,10 +88,15 @@ export const alertDataConfig = {
   name: 'Alerts',
   type: 'flags',
   shape: 'circlepin',
-  width: 20
+  width: 20,
+  showInLegend: false,
+  color: colors.red[400],
 }
 
 export const chartOptions = {
+  legend: {
+    enabled: true,
+  },
   rangeSelector: {
     buttons: [
       {type: 'month', count: 1, text: '1M'},
@@ -95,7 +107,7 @@ export const chartOptions = {
       {type: 'year', count: 3, text: '3Y'},
       {type: 'all', text: 'All'}
     ],
-    selected: 0
+    selected: 1
   },
   xAxis: {
     type: 'datetime',
@@ -114,13 +126,14 @@ export const chartOptions = {
   },{
     id: 'price',
     title: { text: 'Stock Price'},
-    labels: {align: 'right', x: -3},
+    labels: {align: 'right', x: -3, format: '{value}%'},
     height: '40%',
     lineWidth: 2,
     resize: {
       enabled: true, y: 6,
-      controlledAxis: {prev: ['sentiment_score'], next: ['news_count', 'sentiments']}
+      controlledAxis: {prev: ['sentiment_score'], next: [ 'sentiments']}
     },
+    allowDecimals: true,
     tickPixelInterval: 25,
     showEmpty: false,
   },{
@@ -129,21 +142,21 @@ export const chartOptions = {
     title: { text: 'News Count'},
     opposite: false,
     offset: 0,
-    top: '45%', 
-    height: '25%',
+    top: '70%', 
+    height: '30%',
     lineWidth: 2,
     tickPixelInterval: 25,
   }, {
     id: 'sentiments',
     title: { text: 'Sentiment %'},
-    labels: {align: 'right', x: -3},
+    labels: {align: 'right', x: -3, format: '{value}%'},
     top: '45%',
-    height: '25%',
+    height: '20%',
     lineWidth: 2,
     offset: 0,
     resize: {
       enabled: true, y:6, 
-      controlledAxis: {prev: ['news_count'], next: ['keywords']}
+      controlledAxis: { next: ['news_count','keywords']}
     },
     tickPixelInterval: 25,
   },
@@ -151,23 +164,22 @@ export const chartOptions = {
     id: 'keywords',
     labels: {align: 'right', x: -3},
     title: {text: 'Keywords'},
-    top: '75%',
-    height: '25%',
+    top: '70%',
+    height: '30%',
     offset: 0,
     lineWidth: 2,
     tickPixelInterval: 25,
   },],
   plotOptions: {
     column: {
-      pointRange:24 * 60 * 60 * 1000,
       stacking: 'normal',
+      dataGrouping: {groupPixelWidth: 25}
     },
     series: {
-        pointRange: 24 * 60 * 60 * 1000,
-        showInNavigator: true
-    }
+        showInNavigator: true,
+    },
   },
   chart: {
-    height: 450
+    height: 460
   }
 }

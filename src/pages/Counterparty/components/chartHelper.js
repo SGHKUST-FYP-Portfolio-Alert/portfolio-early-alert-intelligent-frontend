@@ -9,9 +9,12 @@ function parseData(input, config){
 
   return config.map(function({key,defaultValue, ...rest}){
     const path = key.split('.');
-    const data = input.map((obj, idx) => 
-      [datetime[idx], path.reduce((prev, curr)=> prev?.[curr], obj) || defaultValue]
-    ).filter(([_, value]) => value != undefined);
+    const data = input.map((obj, idx) => {
+      let value = path.reduce((prev, curr)=> prev?.[curr], obj) || defaultValue
+      if (Array.isArray(value))
+        return [datetime[idx], ...value];
+      else return [datetime[idx], value]
+    }).filter(([_, value]) => value != undefined);
     return {
       data,
       key,
