@@ -43,7 +43,7 @@ const Dashboard = (props) => {
 
   useEffect(function(){
     axios.get(
-      serverURL + 'alert?detailed=true&date=' + selectedDate.toISOString().substring(0, 10)
+      serverURL + 'alert?dashboard=true&date=' + selectedDate.toISOString().substring(0, 10)
     )
       .then((response)=>{
         setAlerts(response.data)
@@ -79,8 +79,8 @@ const Dashboard = (props) => {
       </MuiPickersUtilsProvider>
       </Paper>
       <Paper className={classes.cardsContainer}>
-        { alerts.filter(a => showDismissed? true: a.feedback !== false).map((item, index) =>
-          <AlertCard item={item} key={index}/>
+        { alerts.map((item, index) =>
+          <AlertCard item={item} key={index} showDismissed={showDismissed}/>
         )}
       </Paper>
     </div>

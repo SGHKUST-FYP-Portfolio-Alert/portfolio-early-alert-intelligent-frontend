@@ -8,6 +8,7 @@ import React, { useState, useEffect } from "react";
 import { Chip, CircularProgress } from "@material-ui/core";
 import { getSentimentColor } from "../helper";
 import CircularBarWithLabel from "../components/CircularBarWithLabel";
+import { Paper } from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -62,8 +63,8 @@ const CounterpartyList = (props) => {
     },
     {
       field: 'name',
-      headerName: 'Counterparty Name',
-      width: 250
+      headerName: 'Name',
+      width: 200
     },
     {
       field: 'sentiment',
@@ -103,6 +104,7 @@ const CounterpartyList = (props) => {
           Delete
         </Button>
       </div>
+      <Paper className={classes.listContainer}>
       { data.length > 0 ?
         <DataGrid
           autoHeight
@@ -116,6 +118,7 @@ const CounterpartyList = (props) => {
         /> :
         <CircularProgress/>
       }
+      </Paper>
     </div>
   )
 }

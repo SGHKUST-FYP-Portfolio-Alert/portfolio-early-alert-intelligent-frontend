@@ -14,6 +14,7 @@ import { Autorenew } from '@material-ui/icons';
 import { generateAlertContent } from '../helper'
 import axios from 'axios';
 import { serverURL } from '../constants';
+import { useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
     companyName: {
@@ -74,20 +75,26 @@ const useStyles = makeStyles((theme) => ({
     },
     content: {
       flexGrow: 1
+    },
+    opaque: {
+      opacity: 0.5
     }
 }));
 
 const AlertCard = (props) => {
 
   const classes = useStyles();
-  const { history, item, key } = props;
+  const { history, item, key, showDismissed } = props;
+  const [ feedback, setFeedback ] = useState(item.feedback)
 
   function submitFeedback(id, feedback){
     axios.put( serverURL+'alert?id='+id, {
-      feedback: feedback
+      feedback: feedback,
     })
+    setFeedback(feedback)
   }
 
+  if (showDismissed || feedback)
   return (
     <Card
       elevation={2}
@@ -95,7 +102,8 @@ const AlertCard = (props) => {
         classes.card,
         item.category === 'alert'? classes.cardAlert :
         item.category === 'warning'? classes.cardWarning : 
-        item.category === 'reminder'? classes.cardReminder : null
+        item.category === 'reminder'? classes.cardReminder : null,
+        feedback === false? classes.opaque: null
       )}
     key={key}
     >
@@ -123,16 +131,16 @@ const AlertCard = (props) => {
       </CardContent>
       <CardContent className={classes.feedbackRow}>
         <div className={classes.feedbackButtonContainer}>
-          <IconButton className={[classes.iconButton, item.feedback? classes.iconButtonActive: null]} onClick={()=>submitFeedback(item.id, true)}>
+          <IconButton className={[classes.iconButton, feedback? classes.iconButtonActive: null]} onClick={()=>submitFeedback(item.id, true)}>
             <CheckCircleIcon/>
           </IconButton>
-          <IconButton className={[classes.iconButton, item.feedback === false? classes.iconButtonActive: null]} onClick={()=>submitFeedback(item.id, false)}>
+          <IconButton className={[classes.iconButton, feedback === false? classes.iconButtonActive: null]} onClick={()=>submitFeedback(item.id, false)}>
           <CancelIcon/>
           </IconButton>
         </div>
       </CardContent>
     </Card>
-  )
+  ); else return null;
 
 }
 
