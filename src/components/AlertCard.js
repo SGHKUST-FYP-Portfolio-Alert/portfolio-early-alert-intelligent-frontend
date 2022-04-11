@@ -15,6 +15,8 @@ import { generateAlertContent } from '../helper'
 import axios from 'axios';
 import { serverURL } from '../constants';
 import { useState } from 'react';
+import { getSentimentColor } from '../helper';
+import CircularBarWithLabel from './CircularBarWithLabel';
 
 const useStyles = makeStyles((theme) => ({
     companyName: {
@@ -120,14 +122,25 @@ const AlertCard = (props) => {
             {item.date.substring(0, 10)}
           </Typography>
         </div>
-        <Typography>
-          {generateAlertContent(item)}
-        </Typography>
-        <div className={classes.keywordRow}>
-          {item?.keywords?.map((keyword, index) => (
-            <Chip key={index} label={keyword}/>
-          ))}
+        <div className={classes.Row}>
+          <div>
+            <Typography>
+            {generateAlertContent(item)}
+            </Typography>
+            <div className={classes.keywordRow}>
+              {Object.keys(item?.data?.keyword_count || {}).slice(0,4).map((keyword, index) => (
+                <Chip key={index} label={keyword}/>
+              ))}
+            </div>
+          </div>
+          <CircularBarWithLabel
+            max={1} min={-1} 
+            color={getSentimentColor(item.data?.sentiments?.rolling_avg)} 
+            value={item.data?.sentiments?.rolling_avg}
+          />
         </div>
+
+
       </CardContent>
       <CardContent className={classes.feedbackRow}>
         <div className={classes.feedbackButtonContainer}>

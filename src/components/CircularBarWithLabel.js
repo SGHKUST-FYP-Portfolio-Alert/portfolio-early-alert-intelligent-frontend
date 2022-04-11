@@ -7,7 +7,7 @@ function CircularBarWithLabel(props) {
   const { value, color, max=100, min=0, ...rest } = props
 
     return (
-      <Box position="relative" display="inline-flex">
+      <Box position="relative" display="inline-flex" alignItems="center" justifyContent="center">
         <CircularProgress variant="determinate" {...rest} value={(value-min)/(max-min)*100} style={{color: color}}/>
         <Box
           top={0}
