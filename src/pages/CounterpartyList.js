@@ -101,7 +101,7 @@ const CounterpartyList = (props) => {
       width: 300,
       renderCell: (params) => 
         <React.Fragment>
-          {Object.entries(params.value || {}).sort((a, b)=> a[1] < b[1]).slice(0, 4).map(
+          {Object.entries(params.value || {}).filter(([_, count]) => count >1).sort((a, b)=> a[1] < b[1]).slice(0, 4).map(
             ([k, v]) => <Chip size='small' key={k} className={classes.keywordChips} label={k} />
           )}
         </React.Fragment>

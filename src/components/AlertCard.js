@@ -128,9 +128,10 @@ const AlertCard = (props) => {
             {generateAlertContent(item)}
             </Typography>
             <div className={classes.keywordRow}>
-              {Object.keys(item?.data?.keyword_count || {}).slice(0,4).map((keyword, index) => (
-                <Chip key={index} label={keyword}/>
-              ))}
+              {Object.keys(item?.data?.keyword_count || {})
+                .filter(k => item?.data?.keyword_count[k] > 1).slice(0,4)
+                .map((keyword, index) => <Chip key={index} label={keyword}/>)
+              }
             </div>
           </div>
           <CircularBarWithLabel
