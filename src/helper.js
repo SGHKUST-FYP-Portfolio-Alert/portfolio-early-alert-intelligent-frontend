@@ -38,6 +38,13 @@ export function getSentimentColor(score){
     
 }
 
+export function getSentimentColorSharp(score){
+    if (score === undefined) return colors.neutral
+    if (score > 0.3) return colors.positive
+    if (score < 0) return colors.negative
+    return colors.neutral
+}
+
 export function escapeRegExp(value) {
     return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
   }

@@ -8,7 +8,14 @@ function CircularBarWithLabel(props) {
 
     return (
       <Box position="relative" display="inline-flex" alignItems="center" justifyContent="center">
-        <CircularProgress variant="determinate" {...rest} value={(value-min)/(max-min)*100} style={{color: color}}/>
+        <Box
+          position="absolute"
+          borderRadius={20}
+          width={40}
+          height={40}
+          style={{backgroundColor: 'white', opacity: '30%'}}
+        />
+        <CircularProgress variant="determinate" thickness={20} {...rest} value={(value-min)/(max-min)*100} style={{color: color}}/>
         <Box
           top={0}
           left={0}

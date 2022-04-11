@@ -11,7 +11,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Autorenew } from '@material-ui/icons';
-import { generateAlertContent } from '../helper'
+import { generateAlertContent, getSentimentColorSharp } from '../helper'
 import axios from 'axios';
 import { serverURL } from '../constants';
 import { useState } from 'react';
@@ -20,7 +20,8 @@ import CircularBarWithLabel from './CircularBarWithLabel';
 
 const useStyles = makeStyles((theme) => ({
     companyName: {
-      fontWeight: 'bold',
+      fontWeight: 600,
+      fontSize: '1.05rem'
     },
     card: {
       maxWidth: '100%',
@@ -136,7 +137,7 @@ const AlertCard = (props) => {
           </div>
           <CircularBarWithLabel
             max={1} min={-1} 
-            color={getSentimentColor(item.data?.sentiments?.rolling_avg)} 
+            color={getSentimentColorSharp(item.data?.sentiments?.rolling_avg)} 
             value={item.data?.sentiments?.rolling_avg}
           />
         </div>

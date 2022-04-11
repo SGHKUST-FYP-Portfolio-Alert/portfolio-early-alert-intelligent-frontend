@@ -9,18 +9,27 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-import { colors, Paper } from '@material-ui/core';
+import { colors, Paper, Typography } from '@material-ui/core';
 import CheckboxWithLabel from '../components/CheckboxWithLabel';
 import SearchBox from '../components/SearchBox';
 import { Box } from '@material-ui/core';
+import Overview from '../components/Overview';
 
 const useStyles = makeStyles((theme) => ({
   dashboard: {
     textAlign: 'center',
+    display: 'flex',
+  },
+  overviewContainer: {
+    textAlign: 'left',
+    width: 560,
+    padding: theme.spacing(2),
+    paddingTop: theme.spacing(1),
+    marginRight: theme.spacing(1)
   },
   headerContainer: {
-    maxWidth: 560,
-    margin: 'auto',
+    width: 560,
+    marginRight: theme.spacing(1),
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
     paddingBottom: theme.spacing(1),
@@ -30,8 +39,10 @@ const useStyles = makeStyles((theme) => ({
   },
   cardsContainer: {
     padding: theme.spacing(2),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    textAlign: 'left',
     maxWidth: 560,
-    margin: 'auto',
   },
   name: {
     color: colors.grey[800]
@@ -71,42 +82,49 @@ const Dashboard = (props) => {
 
   return (
     <div className={classes.dashboard}>
-      <Paper className={classes.headerContainer}>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <KeyboardDatePicker
-          style={{width: 140}}
-          disableToolbar
-          variant="inline"
-          format="MM/dd/yyyy"
-          margin="normal"
-          id="date-picker-inline"
-          label="Date Picker"
-          value={selectedDate}
-          onChange={(date)=>setSelectedDate(date)}
-          KeyboardButtonProps={{
-            'aria-label': 'change date',
-          }}
-        />
-        <SearchBox
-          multiple
-          suggestionURL={serverURL+'counterparty/search?query='}
-          getOptionSelected={(option, value) => option.symbol === value.symbol}
-          filterOptions={x=>x}
-          renderOption={renderOption}
-          getOptionLabel={(option) => option.symbol}
-          onChange={(evt, value)=>setSelectedCounterparties(value)}
-          value={selectedCounterparties}
-          label="Counterparty"
-          style={{ width: 180 }}
-        />
-        <CheckboxWithLabel
-          label="Show dismissed"
-          value={showDismissed}
-          onClick={()=>setShowDismissed(!showDismissed)}
-        />
-      </MuiPickersUtilsProvider>
-      </Paper>
+      <div>
+        <Paper className={classes.headerContainer}>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDatePicker
+            style={{width: 140}}
+            disableToolbar
+            variant="inline"
+            format="MM/dd/yyyy"
+            margin="normal"
+            id="date-picker-inline"
+            label="Date Picker"
+            value={selectedDate}
+            onChange={(date)=>setSelectedDate(date)}
+            KeyboardButtonProps={{
+              'aria-label': 'change date',
+            }}
+          />
+          <SearchBox
+            multiple
+            suggestionURL={serverURL+'counterparty/search?query='}
+            getOptionSelected={(option, value) => option.symbol === value.symbol}
+            filterOptions={x=>x}
+            renderOption={renderOption}
+            getOptionLabel={(option) => option.symbol}
+            onChange={(evt, value)=>setSelectedCounterparties(value)}
+            value={selectedCounterparties}
+            label="Counterparty"
+            style={{ width: 180 }}
+          />
+          <CheckboxWithLabel
+            label="Show dismissed"
+            value={showDismissed}
+            onClick={()=>setShowDismissed(!showDismissed)}
+          />
+        </MuiPickersUtilsProvider>
+        </Paper>
+        <Paper className={classes.overviewContainer}>
+          <Typography variant="h6">Overview</Typography>
+          <Overview />
+        </Paper>
+      </div>
       <Paper className={classes.cardsContainer}>
+        <Typography variant='h6'>Alerts</Typography>
         { alerts
           .filter((item)=> selectedCounterparties.length? selectedSymbols.includes(item.counterparty.symbol): true)
           .map((item) =>
