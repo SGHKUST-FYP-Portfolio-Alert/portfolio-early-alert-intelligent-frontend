@@ -9,13 +9,16 @@ import { Chip, CircularProgress } from "@material-ui/core";
 import { getSentimentColor } from "../helper";
 import CircularBarWithLabel from "../components/CircularBarWithLabel";
 import { Paper } from "@material-ui/core";
-
+import SearchBox from "../components/SearchBox";
+import { escapeRegExp } from "../helper";
+import debounce from 'lodash/debounce';
 
 const useStyles = makeStyles((theme) => ({
   counterpartyList: {
     textAlign: 'center',
   },
   buttonRow: {
+    display: 'flex',
     textAlign: 'left',
     marginBottom: theme.spacing(1),
     '& > *': {
@@ -33,11 +36,23 @@ const CounterpartyList = (props) => {
   const { history } = props;
   const [ data, setData ] = useState([]);
   const [ selectedCounterparties, setSelectedCounterparties ] = useState([]);
+  const [searchText, setSearchText] = React.useState('');
   const counterparties = data.map(c => ({
     sentiment: c?.data?.sentiments?.rolling_avg,
     keywords: c?.data?.keyword_count,
-    ...c
+    symbol: c.symbol,
+    name: c.name
   }))
+
+
+  const searchRegex = new RegExp(escapeRegExp(searchText), 'i');
+  const filteredCounterparties = counterparties.filter((row) =>
+    Object.keys(row).some(
+      (field) =>  searchRegex.test(
+        typeof row[field] == 'object'? Object.keys(row[field]).toString(): row[field]?.toString()
+      )
+    )
+  )
 
   function handleDeleteCounterparties(){
     const promises = selectedCounterparties.map(
@@ -87,7 +102,7 @@ const CounterpartyList = (props) => {
       renderCell: (params) => 
         <React.Fragment>
           {Object.entries(params.value || {}).sort((a, b)=> a[1] < b[1]).slice(0, 4).map(
-            ([k, v]) => <Chip size='small' className={classes.keywordChips} label={k} />
+            ([k, v]) => <Chip size='small' key={k} className={classes.keywordChips} label={k} />
           )}
         </React.Fragment>
     }
@@ -106,6 +121,10 @@ const CounterpartyList = (props) => {
         >
           Delete
         </Button>
+        <SearchBox
+          onInputChange={(evt, val)=>debounce(setSearchText, 200)(val)}
+          open={false}
+        />
       </div>
       <Paper className={classes.listContainer}>
       { data.length > 0 ?
@@ -113,7 +132,7 @@ const CounterpartyList = (props) => {
           autoHeight
           checkboxSelection
           columns={columns}
-          rows={counterparties}
+          rows={filteredCounterparties}
           getRowId={(row) => row.symbol}
           onRowClick={({row})=>history.push("/counterparty?symbol="+row.symbol)}
           onSelectionModelChange={(val)=>setSelectedCounterparties(val)}

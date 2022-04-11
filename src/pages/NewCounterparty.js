@@ -6,8 +6,6 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import SearchIcon from '@material-ui/icons/Search';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import classNames from "classnames";
 import { colors } from "@material-ui/core";
 import debounce from 'lodash/debounce';
 import { useState } from 'react';
@@ -50,6 +48,9 @@ const useStyles = makeStyles((theme) => ({
   description:{
     fontSize: 'small',
     color: colors.grey[600]
+  },
+  input: {
+    backgroundColor: 'white'
   }
 }));
 
@@ -61,9 +62,9 @@ const NewCounterparty = (props) => {
   const [ selectedCounterparties, setSelectedCounterparties ] = useState([]);
 
   function search(query){
-    axios.get(serverURL+`counterparty/search?query=${query}`)
+    axios.get(serverURL+`counterparty/search?new=true&query=${query}`)
       .then((response)=>{
-        setOptions(selectedCounterparties.concat(response.data.result))
+        setOptions(selectedCounterparties.concat(response.data))
       })
       .catch((error)=>{
         console.log("TODO error catching")
@@ -84,7 +85,7 @@ const NewCounterparty = (props) => {
     const promises = selectedCounterparties.map(
       counterparty => 
         axios.post(serverURL+ 'counterparty', {
-          name: counterparty.description, symbol: counterparty.symbol
+          name: counterparty.name, symbol: counterparty.symbol
         })
     )
 
@@ -99,8 +100,10 @@ const NewCounterparty = (props) => {
     <TextField {...params} 
       label="Search Counterparty"
       variant="outlined"
+      margin='dense'
       InputProps={{
         ...params.InputProps,
+        className: classes.input,
         endAdornment: (
           <InputAdornment position="end">
             <SearchIcon />
@@ -113,7 +116,7 @@ const NewCounterparty = (props) => {
   function renderOption(option){
     return(
     <Box>
-      {option.symbol} - <span className={classes.description}>{option.description}</span>
+      {option.symbol} - <span className={classes.description}>{option.name}</span>
     </Box>
     )
   }

@@ -11,6 +11,8 @@ import {
 } from '@material-ui/pickers';
 import { colors, Paper } from '@material-ui/core';
 import CheckboxWithLabel from '../components/CheckboxWithLabel';
+import SearchBox from '../components/SearchBox';
+import { Box } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   dashboard: {
@@ -30,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     maxWidth: 560,
     margin: 'auto',
+  },
+  name: {
+    color: colors.grey[800]
   }
 }));
 
@@ -38,6 +43,8 @@ const Dashboard = (props) => {
   const classes = useStyles();
   const { history } = props;
   const [selectedDate, setSelectedDate] = useState(new Date())
+  const [ selectedCounterparties, setSelectedCounterparties ] = useState([])
+  const selectedSymbols = selectedCounterparties.map(i => i.symbol)
   const [showDismissed, setShowDismissed] = useState(false)
   const [alerts, setAlerts] = useState([]);
 
@@ -53,12 +60,21 @@ const Dashboard = (props) => {
       })
   }, [selectedDate])
 
+  function renderOption(option){
+    return(
+    <Box>
+      {option.symbol} - <span className={classes.name}>{option.name}</span>
+    </Box>
+    )
+  }
+
 
   return (
     <div className={classes.dashboard}>
       <Paper className={classes.headerContainer}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <KeyboardDatePicker
+          style={{width: 140}}
           disableToolbar
           variant="inline"
           format="MM/dd/yyyy"
@@ -71,6 +87,18 @@ const Dashboard = (props) => {
             'aria-label': 'change date',
           }}
         />
+        <SearchBox
+          multiple
+          suggestionURL={serverURL+'counterparty/search?query='}
+          getOptionSelected={(option, value) => option.symbol === value.symbol}
+          filterOptions={x=>x}
+          renderOption={renderOption}
+          getOptionLabel={(option) => option.symbol}
+          onChange={(evt, value)=>setSelectedCounterparties(value)}
+          value={selectedCounterparties}
+          label="Counterparty"
+          style={{ width: 180 }}
+        />
         <CheckboxWithLabel
           label="Show dismissed"
           value={showDismissed}
@@ -79,8 +107,10 @@ const Dashboard = (props) => {
       </MuiPickersUtilsProvider>
       </Paper>
       <Paper className={classes.cardsContainer}>
-        { alerts.map((item) =>
-          <AlertCard item={item} key={item.id} showDismissed={showDismissed}/>
+        { alerts
+          .filter((item)=> selectedCounterparties.length? selectedSymbols.includes(item.counterparty.symbol): true)
+          .map((item) =>
+            <AlertCard item={item} key={item.id} showDismissed={showDismissed}/>
         )}
       </Paper>
     </div>

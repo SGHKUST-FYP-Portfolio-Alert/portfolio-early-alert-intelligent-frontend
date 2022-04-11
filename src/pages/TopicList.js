@@ -30,11 +30,11 @@ const CounterpartyList = (props) => {
 
   function handleDelteTopics(){
     const promises = selectedTopics.map(
-      counterparty => axios.delete(serverURL+'counterparty?symbol='+counterparty)
+      id => axios.delete(serverURL+'topic?id='+id)
     )
 
     Promise.all(promises)
-      .then(history.go())
+      .then(()=>history.go())
   }
 
   useEffect(()=>{

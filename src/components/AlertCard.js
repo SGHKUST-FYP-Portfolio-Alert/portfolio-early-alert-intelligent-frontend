@@ -131,10 +131,10 @@ const AlertCard = (props) => {
       </CardContent>
       <CardContent className={classes.feedbackRow}>
         <div className={classes.feedbackButtonContainer}>
-          <IconButton className={[classes.iconButton, feedback? classes.iconButtonActive: null]} onClick={()=>submitFeedback(item.id, true)}>
+          <IconButton className={classnames(classes.iconButton, feedback? classes.iconButtonActive: null)} onClick={()=>submitFeedback(item.id, true)}>
             <CheckCircleIcon/>
           </IconButton>
-          <IconButton className={[classes.iconButton, feedback === false? classes.iconButtonActive: null]} onClick={()=>submitFeedback(item.id, false)}>
+          <IconButton className={classnames(classes.iconButton, feedback === false? classes.iconButtonActive: null)} onClick={()=>submitFeedback(item.id, false)}>
           <CancelIcon/>
           </IconButton>
         </div>
