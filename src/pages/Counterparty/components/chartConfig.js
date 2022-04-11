@@ -192,7 +192,6 @@ export const chartOptions = {
   plotOptions: {
     column: {
       stacking: 'normal',
-      dataGrouping: {groupPixelWidth: 25}
     },
     series: {
       dataGrouping: {
