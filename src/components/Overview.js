@@ -36,7 +36,7 @@ const PieCompareToYesterday = ({data}) => {
   }
   const options = data? {
     ...pieChartConfig,
-    title: {...pieChartConfig.title, text: 'Daily Variation'},
+    title: {...pieChartConfig.title, text: 'Last Day Variation'},
     series: [{
       ...pieChartConfig.series,
       data: Object.entries(data || {}).map(([k, v])=>({...d_sentiment_param[k], y: v}))
@@ -75,13 +75,13 @@ const LineSentiment = ({data}) => {
   />: null
 }
 
-const Overview = () => {
+const Overview = ({date}) => {
 
   const [ data, setData ] = useState({})
   useEffect(function(){
-    axios.get(serverURL+'overview')
+    axios.get(serverURL+'overview?date='+ date.toISOString().substring(0,10))
       .then((response)=> setData(response.data))
-  }, [])
+  }, [date])
 
   return <div>
     <Box display='flex' marginBottom={2}>

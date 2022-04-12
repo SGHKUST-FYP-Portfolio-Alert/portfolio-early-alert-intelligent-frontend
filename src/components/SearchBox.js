@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SearchBox = (props) =>{
 
-  const { label, suggestionURL, debounceTime=300, onInputChange, onChange, value, ...rest } = props;
+  const { label, suggestionURL, debounceTime=300, onInputChange, onChange, value, variant, margin, ...rest } = props;
   const classes = useStyles();
   const [ options, setOptions ] = useState([]);
   
@@ -55,6 +55,8 @@ const SearchBox = (props) =>{
 
     return (
     <TextField {...params}
+      margin={margin}
+      variant={variant}
       label={label}
       InputProps={{
         ...params.InputProps,

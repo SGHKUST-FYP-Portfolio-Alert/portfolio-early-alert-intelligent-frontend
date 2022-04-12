@@ -14,6 +14,9 @@ import CheckboxWithLabel from '../components/CheckboxWithLabel';
 import SearchBox from '../components/SearchBox';
 import { Box } from '@material-ui/core';
 import Overview from '../components/Overview';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import { IconButton } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   dashboard: {
@@ -35,7 +38,13 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(1),
     marginBottom: theme.spacing(1),
     display: 'flex',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    '& > .MuiTypography-root': {
+      marginTop: 'auto',
+      marginBottom: 'auto',
+      position: 'relative',
+      top: 2
+    }
   },
   cardsContainer: {
     padding: theme.spacing(2),
@@ -53,7 +62,10 @@ const Dashboard = (props) => {
 
   const classes = useStyles();
   const { history } = props;
-  const [selectedDate, setSelectedDate] = useState(new Date())
+  const [selectedDate, setSelectedDate] = useState({
+    from: new Date(Date.now() - 5*24*60*60*1000),
+    to: new Date()
+  })
   const [ selectedCounterparties, setSelectedCounterparties ] = useState([])
   const selectedSymbols = selectedCounterparties.map(i => i.symbol)
   const [showDismissed, setShowDismissed] = useState(false)
@@ -61,7 +73,9 @@ const Dashboard = (props) => {
 
   useEffect(function(){
     axios.get(
-      serverURL + 'alert?dashboard=true&date=' + selectedDate.toISOString().substring(0, 10)
+      serverURL + 'alert?dashboard=true&date_from=' +
+      selectedDate.from.toISOString().substring(0, 10) + 
+      '&date_to=' + selectedDate.to.toISOString().substring(0, 10)
     )
       .then((response)=>{
         setAlerts(response.data)
@@ -79,52 +93,81 @@ const Dashboard = (props) => {
     )
   }
 
+  function setSelectedDateTo(date){
+    setSelectedDate({from: date < selectedDate.from? date: selectedDate.from , to: date})
+  }
+
 
   return (
     <div className={classes.dashboard}>
       <div>
         <Paper className={classes.headerContainer}>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <KeyboardDatePicker
-            style={{width: 140}}
-            disableToolbar
-            variant="inline"
-            format="MM/dd/yyyy"
-            margin="normal"
-            id="date-picker-inline"
-            label="Date Picker"
-            value={selectedDate}
-            onChange={(date)=>setSelectedDate(date)}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
-          />
-          <SearchBox
-            multiple
-            suggestionURL={serverURL+'counterparty/search?query='}
-            getOptionSelected={(option, value) => option.symbol === value.symbol}
-            filterOptions={x=>x}
-            renderOption={renderOption}
-            getOptionLabel={(option) => option.symbol}
-            onChange={(evt, value)=>setSelectedCounterparties(value)}
-            value={selectedCounterparties}
-            label="Counterparty"
-            style={{ width: 180 }}
-          />
-          <CheckboxWithLabel
-            label="Show dismissed"
-            value={showDismissed}
-            onClick={()=>setShowDismissed(!showDismissed)}
-          />
-        </MuiPickersUtilsProvider>
+          <Typography>Date Range:</Typography>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              style={{width: 140}}
+              disableToolbar
+              variant="inline"
+              format="MM/dd/yyyy"
+              margin="normal"
+              id="date-picker-inline"
+              value={selectedDate.from}
+              onChange={(date)=>setSelectedDate({from: date, to: selectedDate.to > date? selectedDate.to: date})}
+              KeyboardButtonProps={{
+                'aria-label': 'change date',
+              }}
+            />
+          </MuiPickersUtilsProvider>
+          <Typography>~</Typography>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              style={{width: 140}}
+              disableToolbar
+              variant="inline"
+              format="MM/dd/yyyy"
+              margin="normal"
+              id="date-picker-inline"
+              value={selectedDate.to}
+              onChange={setSelectedDateTo}
+              KeyboardButtonProps={{
+                'aria-label': 'change date',
+              }}
+            />
+          </MuiPickersUtilsProvider>
+          <Box display="flex" alignItems="center">
+            <IconButton onClick={()=>setSelectedDateTo(new Date(selectedDate.to.getTime() - 24*3600*1000))}><ArrowBackIosIcon/></IconButton>
+            <IconButton onClick={()=>setSelectedDateTo(new Date(selectedDate.to.getTime() + 24*3600*1000))}><ArrowForwardIosIcon/></IconButton>
+          </Box>
         </Paper>
         <Paper className={classes.overviewContainer}>
           <Typography variant="h6">Overview</Typography>
-          <Overview />
+          <Overview date={selectedDate.to}/>
         </Paper>
       </div>
       <Paper className={classes.cardsContainer}>
-        <Typography variant='h6'>Alerts</Typography>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography variant='h6'>Alerts</Typography>
+          <Box display="flex" alignItems="center">
+            <SearchBox
+                multiple
+                suggestionURL={serverURL+'counterparty/search?query='}
+                getOptionSelected={(option, value) => option.symbol === value.symbol}
+                filterOptions={x=>x}
+                renderOption={renderOption}
+                getOptionLabel={(option) => option.symbol}
+                onChange={(evt, value)=>setSelectedCounterparties(value)}
+                value={selectedCounterparties}
+                label="Counterparty"
+                margin='dense'
+                style={{ width: 180, marginRight: 6, position: 'relative', top: -8 }}
+              />
+              <CheckboxWithLabel
+                label="Show dismissed"
+                value={showDismissed}
+                onClick={()=>setShowDismissed(!showDismissed)}
+              />
+            </Box>
+          </Box>
         { alerts
           .filter((item)=> selectedCounterparties.length? selectedSymbols.includes(item.counterparty.symbol): true)
           .map((item) =>
