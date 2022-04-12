@@ -77,7 +77,8 @@ const useStyles = makeStyles((theme) => ({
       color: colors.grey[600]
     },
     content: {
-      flexGrow: 1
+      flexGrow: 1,
+      padding: theme.spacing(1)
     },
     opaque: {
       opacity: 0.5

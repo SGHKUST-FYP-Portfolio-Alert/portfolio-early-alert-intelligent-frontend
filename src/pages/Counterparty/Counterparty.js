@@ -113,8 +113,9 @@ const Counterparty = (props) => {
   return (
     <div className={classes.counterparty}>
       <div className={classes.currentRow}>
+        <Typography variant='h6'> Counterparty Analytics -  </Typography>
         <Typography variant="h6" className={classes.title}>
-          {counterparty} - {data.counterpartyInfo?.name}
+          {data.counterpartyInfo?.name} ({counterparty})
         </Typography>
         <Typography>
           Sentiment:

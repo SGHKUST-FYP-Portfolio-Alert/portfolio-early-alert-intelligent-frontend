@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react'
 import { colors, serverURL } from '../constants'
 import axios from 'axios';
 import { Box } from '@material-ui/core';
+import { pieChartConfig } from './Ovierview.chartConfig';
+import { colors as muicolors } from '@material-ui/core';
 
 const PieSentiment = ({data}) => {
   const sentiment_param = {
@@ -13,37 +15,17 @@ const PieSentiment = ({data}) => {
     negative: {name: 'Negative', color: colors.negative}
   }
   const options = data? {
-    chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: 'pie',
-        width: 250
-    },
-    title: { text: 'Portfolio Sentiment'},
-    tooltip: {pointFormat: '{point.percentage:.1f}%'},
-    plotOptions: {
-      pie: {
-        allowPointSelect: true,
-          cursor: 'pointer',
-          dataLabels: {
-            distance: -50,
-            format: '<b>{point.name}</b>: {point.percentage:.0f}% ({point.y})'
-          }
-        }
-    },
+    ...pieChartConfig,
+    title: {...pieChartConfig.title, text: 'Portfolio Sentiment',},
     series: [{
-        name: '',
-        innerSize: '50%',
-        colorByPoint: true,
-        data: Object.entries(data || {}).map(([k, v])=>({...sentiment_param[k], y: v}))
+      ...pieChartConfig.series,
+      data: Object.entries(data || {}).map(([k, v])=>({...sentiment_param[k], y: v}))
     }]
   }: null
-
-  return <HighchartsReact
+  return data? <HighchartsReact
     highcharts={Highcharts}
     options={options}
-  />
+  />: null
 }
 
 const PieCompareToYesterday = ({data}) => {
@@ -53,55 +35,44 @@ const PieCompareToYesterday = ({data}) => {
     negative: {name: 'Fallers', color: colors.negative}
   }
   const options = data? {
-    chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: 'pie',
-        width: 250
-    },
-    title: { text: 'Diff to Yesterday'},
-    tooltip: {pointFormat: '{point.percentage:.1f}%'},
-    plotOptions: {
-      pie: {
-        allowPointSelect: true,
-          cursor: 'pointer',
-          dataLabels: {
-            distance: -50,
-            format: '<b>{point.name}</b>: {point.percentage:.0f}% ({point.y})'
-          }
-        }
-    },
+    ...pieChartConfig,
+    title: {...pieChartConfig.title, text: 'Daily Variation'},
     series: [{
-        name: '',
-        innerSize: '50%',
-        colorByPoint: true,
-        data: Object.entries(data || {}).map(([k, v])=>({...d_sentiment_param[k], y: v}))
+      ...pieChartConfig.series,
+      data: Object.entries(data || {}).map(([k, v])=>({...d_sentiment_param[k], y: v}))
     }]
   }: null
 
-  return <HighchartsReact
+  return data? <HighchartsReact
     highcharts={Highcharts}
     options={options}
-  />
+  />: null
 }
 
 const LineSentiment = ({data}) => {
-  const option = data? {
+  const options = data? {
+    chart: {height: 350},
     title: { text: 'Portfolio Sentiment'},
     navigator: {enabled: false},
     rangeSelector: {selected: 1},
+    yAxis: [{
+      plotBands: [
+        {from: -1, to: 0, color: muicolors.red[200], label:{text: 'Negative'}},
+        {from: 0, to: 0.3, color: muicolors.grey[200], label:{text: 'Neutral'}},
+        {from: 0.3, to: 1, color: muicolors.green[200], label:{text: 'Positive'}},
+      ]
+    }],
     series: [{
       name: 'Sentiment',
-      data: [...data].reverse().map(([date, value])=>[Date.parse(date), value*100])
+      data: [...data].reverse().map(([date, value])=>[Date.parse(date), value])
     }]
   }: null
 
-  return <HighchartsReact
+  return data? <HighchartsReact
     highcharts={Highcharts}
-    options={option}
+    options={options}
     constructorType={'stockChart'}
-  />
+  />: null
 }
 
 const Overview = () => {
@@ -113,7 +84,7 @@ const Overview = () => {
   }, [])
 
   return <div>
-    <Box display='flex'>
+    <Box display='flex' marginBottom={2}>
       <PieSentiment
         data={data.sentiment}
       />

@@ -12,6 +12,7 @@ import { Paper } from "@material-ui/core";
 import SearchBox from "../components/SearchBox";
 import { escapeRegExp } from "../helper";
 import debounce from 'lodash/debounce';
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   counterpartyList: {

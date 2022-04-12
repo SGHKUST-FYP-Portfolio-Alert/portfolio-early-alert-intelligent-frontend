@@ -21,11 +21,17 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {
       marginRight: theme.spacing(1),
       display: 'inline-flex'
-    }
+    },
+  },
+  title: {
+    marginRight: theme.spacing(2)
   },
   autocomplete: {
     margin: 0,
     marginTop: -2.5
+  },
+  label: {
+    marginRight: theme.spacing(1)
   }
 }));
 
@@ -76,7 +82,7 @@ const EditTopic = (props) => {
     return (
     <TextField
       {...params}
-      label="Show topic suggestion for"
+      label="LDA Counterparty"
       variant="outlined"
       margin="dense"
     />)
@@ -91,21 +97,24 @@ const EditTopic = (props) => {
     }
 
     return <div>
-      <Autocomplete
-        renderInput={renderAutocompleteInput}
-        style={{ width: 250 }}
-        className={classes.autocomplete}
-        value={selectedCounterpartyForSuggestion}
-        options={options}
-        getOptionLabel={(option)=>option.symbol}
-        renderOption={(option)=>
-          <Box>
-            {option.symbol} - <span>{option.name}</span>
-          </Box>
-        }
-        getOptionSelected={(option) => option.symbol == selectedCounterpartyForSuggestion.symbol}
-        onChange={function(evt, value){setSelectedCounterpartyForSuggestion(value)}}
-      />
+      <Box display='flex' alignItems='center' marginBottom={1}>
+        <Typography className={classes.label}> Show LDA Topics suggestion for: </Typography>
+        <Autocomplete
+          renderInput={renderAutocompleteInput}
+          style={{ width: 250 }}
+          className={classes.autocomplete}
+          value={selectedCounterpartyForSuggestion}
+          options={options}
+          getOptionLabel={(option)=>option.symbol}
+          renderOption={(option)=>
+            <Box>
+              {option.symbol} - <span>{option.name}</span>
+            </Box>
+          }
+          getOptionSelected={(option) => option.symbol == selectedCounterpartyForSuggestion.symbol}
+          onChange={function(evt, value){setSelectedCounterpartyForSuggestion(value)}}
+        />
+      </Box>
       {ldaSuggestion?.topics?.map((topic, i) =>
         <div className={classes.row}>
           <Typography>LDA {i}:</Typography>
@@ -137,6 +146,7 @@ const EditTopic = (props) => {
   return (
     <div className={classes.page}>
       <div className={classes.row}>
+        <Typography variant='h6' className={classes.title}>Edit Topics</Typography>
         <Button variant="contained" color="primary" onClick={submit}>Save</Button>
         <Button variant="contained" color="secondary" onClick={()=>history.goBack()}>Cancel</Button>
         <Button variant="contained" onClick={()=>history.go()}>Reset</Button>

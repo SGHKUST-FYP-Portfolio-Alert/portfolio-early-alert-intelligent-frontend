@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { serverURL } from '../constants'
 import { useState, useEffect } from "react";
+import { Paper } from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -78,6 +79,7 @@ const CounterpartyList = (props) => {
           Delete
         </Button>
       </div>
+      <Paper>
       <DataGrid
         autoHeight
         checkboxSelection
@@ -87,6 +89,7 @@ const CounterpartyList = (props) => {
         onRowClick={({row})=>history.push("/edit-topic?topicId="+row.id)}
         onSelectionModelChange={(val)=>setSelectedTopics(val)}
       />
+      </Paper>
     </div>
   )
 }

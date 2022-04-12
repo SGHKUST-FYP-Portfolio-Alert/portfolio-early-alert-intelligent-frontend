@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
     textAlign: 'left',
-    maxWidth: 560,
+    width: 560,
   },
   name: {
     color: colors.grey[800]
