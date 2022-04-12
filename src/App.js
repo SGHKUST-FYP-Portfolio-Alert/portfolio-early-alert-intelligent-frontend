@@ -29,7 +29,7 @@ import { colors } from '@material-ui/core';
 const theme = createTheme({
   palette: {
     background: {
-      default: colors.grey[100],
+      default: colors.grey[200],
     },
     primary: {
       main: '#000'
@@ -37,6 +37,9 @@ const theme = createTheme({
     secondary: {
       main: '#E9041E'
     },
+  },
+  props: {
+    MuiPaper: { elevation: 3}
   }
 });
 
