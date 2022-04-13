@@ -79,9 +79,8 @@ const SentimentChip = ({sentiment}) => {
 const NewListItem = ({newsItem}) => {
 
   const classes = useStyles();
-
   return (
-  <ListItem button onClick={()=>{}} className={classes.listItem}>
+  <ListItem button onClick={()=>{window.open(newsItem.url, "_blank")}} className={classes.listItem}>
     <Avatar variant="rounded" src={newsItem.image} className={classes.image}>
       {newsItem.source}
     </Avatar>
