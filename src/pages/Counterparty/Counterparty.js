@@ -17,6 +17,7 @@ import NewsList from './components/NewsList';
 import AlertList from './components/AlertList';
 import CircularBarWithLabel from '../../components/CircularBarWithLabel';
 import { getSentimentColor } from '../../helper';
+import { SentimentPopover } from './components/popover';
 
 const useStyles = makeStyles((theme) => ({
   counterparty: {
@@ -125,6 +126,7 @@ const Counterparty = (props) => {
           color={getSentimentColor(data?.counterpartyInfo?.data?.sentiments?.rolling_avg)} 
           value={data?.counterpartyInfo?.data?.sentiments?.rolling_avg}
         />
+        <SentimentPopover />
         <Typography className={classes.marginLeft}>
           Keywords:
         </Typography>

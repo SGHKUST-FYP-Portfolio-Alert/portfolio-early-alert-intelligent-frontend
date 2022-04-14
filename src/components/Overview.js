@@ -1,7 +1,7 @@
 
 import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
 import { colors, serverURL } from '../constants'
 import axios from 'axios';
 import { Box } from '@material-ui/core';
@@ -99,4 +99,4 @@ const Overview = ({date, displayMessage}) => {
   </div>
 }
 
-export default Overview
+export default memo(Overview)

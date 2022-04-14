@@ -17,6 +17,7 @@ import Overview from '../components/Overview';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import { IconButton } from '@material-ui/core';
+import { SentimentPopover } from './Counterparty/components/popover';
 
 const useStyles = makeStyles((theme) => ({
   dashboard: {
@@ -142,7 +143,8 @@ const Dashboard = (props) => {
           </Box>
         </Paper>
         <Paper className={classes.overviewContainer}>
-          <Typography variant="h6">Overview</Typography>
+          <Typography variant="h6" display="inline">Overview</Typography>
+          <SentimentPopover />
           <Overview date={selectedDate.to} displayMessage={displayMessage}/>
         </Paper>
       </div>
