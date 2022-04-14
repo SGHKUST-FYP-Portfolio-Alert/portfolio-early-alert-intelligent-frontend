@@ -1,5 +1,5 @@
 import React from 'react';
-import { colors, Paper } from '@material-ui/core';
+import { CircularProgress, colors, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { withRouter } from 'react-router-dom';
@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
 const Counterparty = (props) => {
 
   const classes = useStyles();
-  const { history } = props;
+  const { history, displayMessage } = props;
 
   const queryParams = new URLSearchParams(document.location.search);
   const counterparty = queryParams.get('symbol')
@@ -85,27 +85,27 @@ const Counterparty = (props) => {
     .then((response)=>{
       setData(prevState =>({...prevState, counterpartyInfo: response.data[0]}))
     })
-    .catch((error)=> console.log("TODO error handling", error))
+    .catch((error)=> displayMessage({severity: 'error', message: error.toString()}))
 
     
     axios.get(serverURL + `chart/calculation?counterparty=${counterparty}`)
       .then((response)=>{
         setChartData(prevState => ({...prevState, calculation: parseCalculationData(response.data)}))
       })
-      .catch((error)=> console.log("TODO error handling", error))
+      .catch((error)=> displayMessage({severity: 'error', message: error.toString()}))
 
     axios.get(serverURL + `chart/price?counterparty=${counterparty}`)
       .then((response)=>{
         setChartData(prevState => ({...prevState, price: parsePriceData(response.data)}))
       })
-      .catch((error)=> console.log("TODO error handling", error))
+      .catch((error)=> displayMessage({severity: 'error', message: error.toString()}))
     
     axios.get(serverURL + `alert?counterparty=${counterparty}`)
       .then((response)=>{
         setData(prevState =>({...prevState, alert: response.data}));
         setChartData(prevState => ({...prevState, alert: parseAlertData(response.data)}))
       })
-      .catch((error)=> console.log("TODO error handling", error))
+      .catch((error)=> displayMessage({severity: 'error', message: error.toString()}))
 
   }, []);
 
@@ -136,7 +136,10 @@ const Counterparty = (props) => {
         </div>
       </div>
       <Paper className={classes.paper}>
-        {(chartData.price && chartData.calculation) && <Chart chartData={chartData} setNewsListParam={setNewsListParam} counterparty={counterparty}/>}
+        {(chartData.price && chartData.calculation) ?
+           <Chart chartData={chartData} setNewsListParam={setNewsListParam} counterparty={counterparty}/>:
+           <CircularProgress/>
+        }
       </Paper>
       <Paper className={classes.paper}>
         <NewsList counterparty={counterparty} newsListParam={newsListParam} setNewsListParam={setNewsListParam}/>

@@ -22,13 +22,15 @@ const useStyles = makeStyles((theme) => ({
   dashboard: {
     textAlign: 'center',
     display: 'flex',
+    flexWrap: 'wrap'
   },
   overviewContainer: {
     textAlign: 'left',
     width: 560,
     padding: theme.spacing(2),
     paddingTop: theme.spacing(1),
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   },
   headerContainer: {
     width: 560,
@@ -61,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 const Dashboard = (props) => {
 
   const classes = useStyles();
-  const { history } = props;
+  const { history, displayMessage } = props;
   const [selectedDate, setSelectedDate] = useState({
     from: new Date(Date.now() - 5*24*60*60*1000),
     to: new Date()
@@ -81,7 +83,7 @@ const Dashboard = (props) => {
         setAlerts(response.data)
       })
       .catch((error)=>{
-        console.log("TODO error catching")
+        displayMessage({severity: 'error', message: 'Fetch alerts failed: ' + error})
       })
   }, [selectedDate])
 
@@ -141,7 +143,7 @@ const Dashboard = (props) => {
         </Paper>
         <Paper className={classes.overviewContainer}>
           <Typography variant="h6">Overview</Typography>
-          <Overview date={selectedDate.to}/>
+          <Overview date={selectedDate.to} displayMessage={displayMessage}/>
         </Paper>
       </div>
       <Paper className={classes.cardsContainer}>

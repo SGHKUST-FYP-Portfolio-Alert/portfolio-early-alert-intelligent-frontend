@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 const CounterpartyList = (props) => {
 
   const classes = useStyles();
-  const { history } = props;
+  const { history, displayMessage } = props;
   const [ data, setData ] = useState([]);
   const [ selectedCounterparties, setSelectedCounterparties ] = useState([]);
   const [searchText, setSearchText] = React.useState('');
@@ -61,18 +61,25 @@ const CounterpartyList = (props) => {
     )
 
     Promise.all(promises)
-      .then(history.go())
+      .then(function(){
+        displayMessage({severity: 'success', message: 'Deleted counterparties: '+ selectedCounterparties})
+        setSelectedCounterparties([])
+        fetchCounterpartyList()
+      })
+      .catch(error=> displayMessage({severity: 'error', message: error.toString()}))
   }
 
-  useEffect(()=>{
+  function fetchCounterpartyList(){
     axios.get(serverURL + 'counterparty?detailed=true')
-      .then((response)=>{
-        setData(response.data)
-      })
-      .catch((error)=>{
-        console.log("TODO error catching")
-      })
-  }, []);
+    .then((response)=>{
+      setData(response.data)
+    })
+    .catch((error)=>{
+      displayMessage({severity: 'error', message: 'Fetch counterparty list failed: '+ error})
+    })
+  }
+
+  useEffect(fetchCounterpartyList, []);
 
   const columns = [
     {

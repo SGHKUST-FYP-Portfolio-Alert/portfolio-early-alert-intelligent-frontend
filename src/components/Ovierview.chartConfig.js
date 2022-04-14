@@ -8,14 +8,14 @@ export const pieChartConfig = {
         height: 200
     },
     title: { margin: 0, style:{fontSize: 16} },
-    tooltip: {pointFormat: '{point.percentage:.1f}%'},
+    tooltip: {pointFormat: '{point.percentage:.1f}% ({point.y})'},
     plotOptions: {
       pie: {
         allowPointSelect: true,
           cursor: 'pointer',
           dataLabels: {
             distance: -10,
-            format: '<b>{point.name}</b>: {point.percentage:.0f}% ({point.y})'
+            format: '<b>{point.name}</b>: <br> {point.percentage:.0f}% ({point.y})'
           }
         }
     },

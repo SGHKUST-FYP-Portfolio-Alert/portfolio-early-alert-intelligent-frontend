@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 const NewCounterparty = (props) => {
 
   const classes = useStyles();
-  const { history } = props;
+  const { history, displayMessage } = props;
   const [ options, setOptions ] = useState([]);
   const [ selectedCounterparties, setSelectedCounterparties ] = useState([]);
 
@@ -66,9 +66,7 @@ const NewCounterparty = (props) => {
       .then((response)=>{
         setOptions(selectedCounterparties.concat(response.data))
       })
-      .catch((error)=>{
-        console.log("TODO error catching")
-      })
+      .catch((error)=> displayMessage({severity: 'error', message: error.toString()}))
 
   }
 
@@ -90,8 +88,11 @@ const NewCounterparty = (props) => {
     )
 
     Promise.all(promises)
-      .then(function(){ history.push("counterparty-list")})
-      .catch(function(err){ console.log(err) })
+      .then(function(){ 
+        displayMessage({severity: 'success', message: 'Added counterparties:'+ selectedCounterparties.map(i => i.symbol)})
+        history.push("counterparty-list")
+      })
+      .catch((error)=> displayMessage({severity: 'error', message: error.toString()}))
 
   }
 

@@ -15,7 +15,8 @@ import NewCounterparty from './pages/NewCounterparty';
 import EditTopic from './pages/EditTopic';
 import { useState } from 'react';
 import Fab from '@material-ui/core/Fab';
-import { CssBaseline } from '@material-ui/core';
+import { CssBaseline, Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 
 import {
   BrowserRouter,
@@ -78,9 +79,12 @@ function App() {
 
   const classes = useStyles();
   const [ mobileSidebarOpen, setMobileSidebarOpen ] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarParam, setSnackbarParam] = useState({});
 
-  function handleClick(){
-    setMobileSidebarOpen(!mobileSidebarOpen)
+  function displayMessage(param){
+    setSnackbarOpen(true)
+    setSnackbarParam(param)
   }
 
   return (
@@ -91,17 +95,24 @@ function App() {
           <Sidebar mobileSidebarOpen={mobileSidebarOpen} setMobileSidebarOpen={setMobileSidebarOpen}/>
           <div className={classes.page}>
             <Switch>
-              <Route exact path="/" render={(props) => <Dashboard/>}/>
-              <Route exact path="/counterparty-list" render={(props) => <CounterpartyList/>}/>
-              <Route exact path="/counterparty" render={props => <Counterparty/>}/>
-              <Route exact path="/new-counterparty" render={props => <NewCounterparty/>}/>
-              <Route exact path="/edit-topic" render={props => <EditTopic/>}/>
-              <Route exact path="/topic-list" render={(props) => <TopicList/>}/>
+              <Route exact path="/" render={(props) => <Dashboard displayMessage={displayMessage}/>}/>
+              <Route exact path="/counterparty-list" render={(props) => <CounterpartyList displayMessage={displayMessage}/>}/>
+              <Route exact path="/counterparty" render={props => <Counterparty displayMessage={displayMessage}/>}/>
+              <Route exact path="/new-counterparty" render={props => <NewCounterparty displayMessage={displayMessage}/>}/>
+              <Route exact path="/edit-topic" render={props => <EditTopic displayMessage={displayMessage}/>}/>
+              <Route exact path="/topic-list" render={(props) => <TopicList displayMessage={displayMessage}/>}/>
             </Switch>
           </div>
           <Fab className={classes.fab} onClick={()=>setMobileSidebarOpen(true)}>
             <MenuIcon />
           </Fab>
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={snackbarParam.persist? null: 6000}
+            onClose={()=>setSnackbarOpen(false)}
+          >
+            <MuiAlert onClose={()=>setSnackbarOpen(false)} severity={snackbarParam.severity}>{snackbarParam.message}</MuiAlert>
+          </Snackbar>
         </div>
       </BrowserRouter>
     </ThemeProvider>

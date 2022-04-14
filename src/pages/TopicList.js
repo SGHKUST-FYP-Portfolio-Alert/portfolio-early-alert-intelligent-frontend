@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { serverURL } from '../constants'
 import { useState, useEffect } from "react";
-import { Paper } from "@material-ui/core";
+import { CircularProgress, Paper } from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -22,10 +22,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const CounterpartyList = (props) => {
+const TopicList = (props) => {
 
   const classes = useStyles();
-  const { history } = props;
+  const { history, displayMessage } = props;
   const [ topics, setTopics ] = useState([]);
   const [ selectedTopics, setSelectedTopics ] = useState([]);
 
@@ -35,18 +35,22 @@ const CounterpartyList = (props) => {
     )
 
     Promise.all(promises)
-      .then(()=>history.go())
+      .then(()=>{
+        displayMessage({severity: 'success', message: 'Deleted topics: '+ selectedTopics.map(x => topics.find(y => y.id == x).title)})
+        setSelectedTopics([])
+        fetchTopicList()
+      }).catch((error) => displayMessage({severity: 'error', message: error.toString()}))
   }
 
-  useEffect(()=>{
+  function fetchTopicList(){
     axios.get(serverURL + 'topic')
-      .then((response)=>{
-        setTopics(response.data)
-      })
-      .catch((error)=>{
-        console.log("TODO error catching")
-      })
-  }, []);
+    .then((response)=>{
+      setTopics(response.data)
+    })
+    .catch((error) => displayMessage({severity: 'error', message: error.toString()}))
+  }
+
+  useEffect(fetchTopicList, []);
 
   const columns = [
     {
@@ -80,18 +84,20 @@ const CounterpartyList = (props) => {
         </Button>
       </div>
       <Paper>
-      <DataGrid
-        autoHeight
-        checkboxSelection
-        columns={columns}
-        rows={topics}
-        //getRowId={(row) => row.id}
-        onRowClick={({row})=>history.push("/edit-topic?topicId="+row.id)}
-        onSelectionModelChange={(val)=>setSelectedTopics(val)}
-      />
+      { topics.length? <DataGrid
+          autoHeight
+          checkboxSelection
+          columns={columns}
+          rows={topics}
+          //getRowId={(row) => row.id}
+          onRowClick={({row})=>history.push("/edit-topic?topicId="+row.id)}
+          onSelectionModelChange={(val)=>setSelectedTopics(val)}
+        />:
+        <CircularProgress />
+      }
       </Paper>
     </div>
   )
 }
 
-export default withRouter(CounterpartyList)
+export default withRouter(TopicList)

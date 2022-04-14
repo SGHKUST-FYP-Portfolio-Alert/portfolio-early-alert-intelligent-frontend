@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 import { serverURL } from '../constants';
-import { Typography } from '@material-ui/core';
+import { CircularProgress, Snackbar, Typography } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import Chip from '@material-ui/core/Chip';
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 const EditTopic = (props) => {
 
   const classes = useStyles();
-  const { history } = props;
+  const { history, displayMessage } = props;
 
   const queryParams = new URLSearchParams(document.location.search);
   const topicId = queryParams.get('topicId')
@@ -61,7 +61,7 @@ const EditTopic = (props) => {
     .then((response)=>{
       setLdaSuggestion(response.data)
     })
-    .catch((error)=> console.log("TODO error handling", error))
+    .catch((error)=> displayMessage({severity: 'error', message: error.toString()}))
   }, [selectedCounterpartyForSuggestion])
 
   useEffect(function(){
@@ -75,7 +75,7 @@ const EditTopic = (props) => {
     .then((response)=>{
       setTopicData(response.data)
     })
-    .catch((error)=> console.log("TODO error handling", error))
+    .catch((error)=> displayMessage({severity: 'error', message: error.toString()}))
   }, [])
 
   function renderAutocompleteInput(params){
@@ -135,12 +135,20 @@ const EditTopic = (props) => {
   }
 
   function submit(){
+    if (topicData.keywords.length == 0){
+      displayMessage({severity: 'warning', message: 'Keywords cannot be empty'})
+      return
+    }
+    displayMessage({severity: 'info', message: <Box display="flex" alignItems="center">Submiting Topics <CircularProgress size={25}/></Box>, persist: true})
     axios(serverURL + 'topic', {
       method: topicId? 'put': 'post',
       data: topicData
     }).then(
-      function(){history.goBack()}
-    )
+      function(){
+        displayMessage({severity: 'success', message: `Topic '${topicData.title}' added!`})
+        history.goBack()
+      }
+    ).catch(error=> displayMessage({severity: 'error', message: error.toString()}))
   }
 
   return (

@@ -75,12 +75,13 @@ const LineSentiment = ({data}) => {
   />: null
 }
 
-const Overview = ({date}) => {
+const Overview = ({date, displayMessage}) => {
 
   const [ data, setData ] = useState({})
   useEffect(function(){
     axios.get(serverURL+'overview?date='+ date.toISOString().substring(0,10))
       .then((response)=> setData(response.data))
+      .catch((error) => displayMessage({severity: 'error', message: "Fetch overview failed: "+ error}))
   }, [date])
 
   return <div>

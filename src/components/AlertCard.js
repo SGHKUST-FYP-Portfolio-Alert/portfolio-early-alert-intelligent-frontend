@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import { withRouter } from 'react-router-dom';
-import { colors } from '@material-ui/core';
+import { CardActionArea, colors } from '@material-ui/core';
 import classnames from 'classnames'
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
@@ -90,6 +90,7 @@ const AlertCard = (props) => {
   const classes = useStyles();
   const { history, item, key, showDismissed } = props;
   const [ feedback, setFeedback ] = useState(item.feedback)
+  const [ hover, setHover ] = useState(false);
 
   function submitFeedback(id, feedback){
     axios.put( serverURL+'alert?id='+id, {
@@ -101,7 +102,9 @@ const AlertCard = (props) => {
   if (showDismissed || feedback !== false)
   return (
     <Card
-      elevation={2}
+      elevation={hover? 6: 2}
+      onMouseOver={()=>setHover(true)}
+      onMouseOut={()=>setHover(false)}
       className={classnames(
         classes.card,
         item.category === 'alert'? classes.cardAlert :
@@ -111,6 +114,7 @@ const AlertCard = (props) => {
       )}
     key={key}
     >
+      <CardActionArea>
       <CardContent
         onClick={()=>history.push("/counterparty?symbol="+item.counterparty.symbol)}
         className={classes.content}
@@ -145,6 +149,7 @@ const AlertCard = (props) => {
 
 
       </CardContent>
+      </CardActionArea>
       <CardContent className={classes.feedbackRow}>
         <div className={classes.feedbackButtonContainer}>
           <IconButton className={classnames(classes.iconButton, feedback? classes.iconButtonActive: null)} onClick={()=>submitFeedback(item.id, true)}>
