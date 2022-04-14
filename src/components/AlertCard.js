@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
     },
     card: {
       maxWidth: '100%',
-      width: 520,
       textAlign: 'left',
       display: 'flex',
       justifyContent: 'space-between',

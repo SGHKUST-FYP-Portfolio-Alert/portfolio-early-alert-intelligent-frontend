@@ -27,14 +27,14 @@ const useStyles = makeStyles((theme) => ({
   },
   overviewContainer: {
     textAlign: 'left',
-    width: 560,
+    width: theme.spacing(70),
     padding: theme.spacing(2),
     paddingTop: theme.spacing(1),
     marginRight: theme.spacing(1),
     marginBottom: theme.spacing(1)
   },
   headerContainer: {
-    width: 560,
+    width: theme.spacing(70),
     marginRight: theme.spacing(1),
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
     textAlign: 'left',
-    width: 560,
+    width: theme.spacing(70),
   },
   name: {
     color: colors.grey[800]

@@ -25,6 +25,7 @@ const PieSentiment = ({data}) => {
   return data? <HighchartsReact
     highcharts={Highcharts}
     options={options}
+    containerProps={{style: {width: '100%'}}}
   />: null
 }
 
@@ -46,6 +47,7 @@ const PieCompareToYesterday = ({data}) => {
   return data? <HighchartsReact
     highcharts={Highcharts}
     options={options}
+    containerProps={{style: {width: '100%'}}}
   />: null
 }
 

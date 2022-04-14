@@ -4,8 +4,7 @@ export const pieChartConfig = {
         plotBorderWidth: null,
         plotShadow: false,
         type: 'pie',
-        width: 250,
-        height: 200
+        height: '80%'
     },
     title: { margin: 0, style:{fontSize: 16} },
     tooltip: {pointFormat: '{point.percentage:.1f}% ({point.y})'},
