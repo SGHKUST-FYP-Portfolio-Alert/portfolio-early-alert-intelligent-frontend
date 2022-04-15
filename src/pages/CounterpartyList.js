@@ -40,7 +40,7 @@ const CounterpartyList = (props) => {
   const [searchText, setSearchText] = React.useState('');
   const counterparties = data.map(c => ({
     sentiment: c?.data?.sentiments?.rolling_avg,
-    keywords: c?.data?.keyword_count,
+    keywords: c?.data?.topic_count,
     symbol: c.symbol,
     name: c.name
   }))

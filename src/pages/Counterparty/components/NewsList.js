@@ -89,8 +89,11 @@ const NewListItem = ({newsItem}) => {
       <div className={classes.infoRow}>
         <Typography variant="subtitle2">{newsItem.source} - {newsItem.date}</Typography>
         <SentimentChip sentiment={newsItem.sentiment}/>
-        {newsItem.keyword_count && Object.keys(newsItem.keyword_count)
-          .map(keyword => <Chip size="small" label={keyword} key={keyword}/>)
+        {newsItem.topic_scores && Object.entries(newsItem.topic_scores)
+          .filter(([title, score]) => score > 0.7)
+          .sort((a, b)=> a[1] < b[1])
+          .slice(0, 3)
+          .map(([title, score]) => <Chip size="small" label={title} key={title}/>)
         }
       </div>
     <Typography variant="body2" className={classes.bodyText}>{newsItem.summary}</Typography>

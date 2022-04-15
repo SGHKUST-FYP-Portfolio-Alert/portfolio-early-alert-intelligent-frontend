@@ -65,15 +65,16 @@ export const calculationDataConfig = [
     tooltip: sentimentTooltipConfig,
     legendIndex: 5,
   },
-  ...keywords.map(keyword => ({
-    name: keyword,
-    key: 'keyword_count.'+ keyword.toLowerCase(),
-    type: 'column',
-    group: 'Keywords',  
-    yAxis: 'keywords',
-    showInLegend: false
-  }))
 ];
+
+export const topicDataConfig = (title) => ({
+  name: title,
+  key: 'topic_count.'+ title,
+  type: 'column',
+  group: 'Topics',  
+  yAxis: 'topics',
+  showInLegend: false
+})
 
 export const priceDataConfig = [
   {
@@ -175,14 +176,14 @@ export const chartOptions = {
     offset: 0,
     resize: {
       enabled: true, y:6, 
-      controlledAxis: { next: ['news_count','keywords']}
+      controlledAxis: { next: ['news_count','topics']}
     },
     tickPixelInterval: 25,
   },
   {
-    id: 'keywords',
+    id: 'topics',
     labels: {align: 'right', x: -3},
-    title: {text: 'Keywords'},
+    title: {text: 'Topics'},
     top: '70%',
     height: '30%',
     offset: 0,

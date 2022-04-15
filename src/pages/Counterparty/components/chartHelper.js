@@ -1,5 +1,5 @@
 import { Flag } from "@material-ui/icons";
-import { calculationDataConfig, priceDataConfig, alertDataConfig } from "./chartConfig";
+import { calculationDataConfig, priceDataConfig, alertDataConfig, topicDataConfig } from "./chartConfig";
 
 function parseData(input, config){
 
@@ -27,7 +27,11 @@ function parseData(input, config){
 };
 
 export function parseCalculationData(input){
-  return parseData(input, calculationDataConfig)
+  const topics = [ ... new Set(input.flatMap(i => Object.keys(i.topic_count || {})))]
+  const config = calculationDataConfig.concat(
+    topics.map(topic => topicDataConfig(topic))
+  )
+  return parseData(input, config)
 }
 
 export function parsePriceData(input){
