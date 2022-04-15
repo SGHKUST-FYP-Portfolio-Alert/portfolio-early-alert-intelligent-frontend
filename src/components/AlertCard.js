@@ -133,9 +133,11 @@ const AlertCard = (props) => {
             {generateAlertContent(item)}
             </Typography>
             <div className={classes.keywordRow}>
-              {Object.keys(item?.data?.topic_count || {})
-                .filter(k => item?.data?.topic_count[k] > 1).slice(0,4)
-                .map((keyword, index) => <Chip key={index} label={keyword}/>)
+              {Object.entries(item?.data?.topic_count || {})
+                .filter(([k, v]) => v > 1)
+                .sort((a, b)=> a[1] < b[1])
+                .slice(0, 3)
+                .map(([k, v]) => <Chip key={k} label={`${k}:${v}`}/>)
               }
             </div>
           </div>

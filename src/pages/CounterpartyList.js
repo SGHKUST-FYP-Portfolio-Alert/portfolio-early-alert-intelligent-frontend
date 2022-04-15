@@ -106,11 +106,11 @@ const CounterpartyList = (props) => {
     {
       field: 'keywords',
       headerName: 'Keywords',
-      width: 300,
+      width: 500,
       renderCell: (params) => 
         <React.Fragment>
-          {Object.entries(params.value || {}).filter(([_, count]) => count >1).sort((a, b)=> a[1] < b[1]).slice(0, 4).map(
-            ([k, v]) => <Chip size='small' key={k} className={classes.keywordChips} label={k} />
+          {Object.entries(params.value || {}).filter(([_, count]) => count >1).sort((a, b)=> a[1] < b[1]).slice(0, 3).map(
+            ([k, v]) => <Chip size='small' key={k} className={classes.keywordChips} label={`${k}:${v}`} />
           )}
         </React.Fragment>
     }
