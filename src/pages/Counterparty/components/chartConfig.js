@@ -1,6 +1,6 @@
 import { colors } from "@material-ui/core";
 
-export const keywords = ["Ownership change", "Change of control", "Acceleration", "accelerate", "Default", "Insolvency", "Insolvent", "Delay", "Late", "Failure", "fail", "Dispute", "Liquidation", "Liquidator", "Margin call", "Haircut", "Bank run", "Termination", "Moratorium", "Suspension", "Suspend", "Fraud", "misrepresentation", "Fine", "sanction", "Breach", "Reschedule", "Restructuring", "Restructure", "Credit event", "Losses", "Loss", "Bailout", "Bailin", "Bankrupt", "Receivership", "Receiver", "Judicial Management", "Judicial Manager", "Administration", "Administrator", "Sequestrate", "Sequestration", "Support", "Capital call", "Liquidity event", "Negative trends", "Price changes", "Board infighting", "Corruption", "Inappropriate or ultra vires dealings", "Negative working capital", "Acquisition", "LBO", "Qualified audit opinion", "Regulatory breach", "Non-performing assets", "Provisions", "Force majeur", "Distress", "Frozen", "Delisted", "Sued", "Suit", "Arrested", "Disappeared", "Uncontactable"];
+//export const keywords = ["Ownership change", "Change of control", "Acceleration", "accelerate", "Default", "Insolvency", "Insolvent", "Delay", "Late", "Failure", "fail", "Dispute", "Liquidation", "Liquidator", "Margin call", "Haircut", "Bank run", "Termination", "Moratorium", "Suspension", "Suspend", "Fraud", "misrepresentation", "Fine", "sanction", "Breach", "Reschedule", "Restructuring", "Restructure", "Credit event", "Losses", "Loss", "Bailout", "Bailin", "Bankrupt", "Receivership", "Receiver", "Judicial Management", "Judicial Manager", "Administration", "Administrator", "Sequestrate", "Sequestration", "Support", "Capital call", "Liquidity event", "Negative trends", "Price changes", "Board infighting", "Corruption", "Inappropriate or ultra vires dealings", "Negative working capital", "Acquisition", "LBO", "Qualified audit opinion", "Regulatory breach", "Non-performing assets", "Provisions", "Force majeur", "Distress", "Frozen", "Delisted", "Sued", "Suit", "Arrested", "Disappeared", "Uncontactable"];
 
 const sentimentTooltipConfig = {
   pointFormat: '<span style="color:{series.color}">●</span> {series.name}: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
@@ -67,12 +67,20 @@ export const calculationDataConfig = [
   },
 ];
 
+const sampleTopic = {
+  'earnings': colors.green[500],
+  'Default': colors.red[500],
+  'Lawsuit': colors.grey[700]
+}
 export const topicDataConfig = (title) => ({
   name: title,
   key: 'topic_count.'+ title,
   type: 'column',
   group: 'Topics',  
   yAxis: 'topics',
+  //threshold: 3,
+  color: sampleTopic[title],
+  visible: Object.keys(sampleTopic).includes(title)? true: false,
   showInLegend: false
 })
 
@@ -80,6 +88,7 @@ export const priceDataConfig = [
   {
     name: 'Candlestick',
     type: 'hollowcandlestick',
+    enableMouseTracking: false,
     key: 'price',
     group: 'Price',
     compare: 'percent',
@@ -120,6 +129,7 @@ export const chartOptions = {
   rangeSelector: {
     buttons: [
       {type: 'month', count: 1, text: '1M'},
+      {type: 'month', count: 2, text: '2M'},
       {type: 'month', count: 3, text: '3M'}, 
       {type: 'month', count: 6, text: '6M'},
       {type: 'ytd', text: 'YTD'},
@@ -192,7 +202,7 @@ export const chartOptions = {
   },],
   plotOptions: {
     column: {
-      stacking: 'normal',
+      
     },
     series: {
       dataGrouping: {

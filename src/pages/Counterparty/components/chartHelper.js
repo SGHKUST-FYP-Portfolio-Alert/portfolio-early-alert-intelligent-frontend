@@ -7,10 +7,11 @@ function parseData(input, config){
   
   const datetime = input.map(obj => Date.parse(obj.date));
 
-  return config.map(function({key,defaultValue, type, ...rest}){
+  return config.map(function({key,defaultValue, type, threshold, ...rest}){
     const path = key.split('.');
     const data = input.map((obj, idx) => {
       let value = path.reduce((prev, curr)=> prev?.[curr], obj) || defaultValue
+      if ( value < threshold ) return [ undefined, undefined ]
       if (Array.isArray(value))
         return type === 'hollowcandlestick'? 
           [datetime[idx], ...value] :
