@@ -10,6 +10,11 @@ import axios from "axios";
 import { colors, serverURL } from "../../../constants";
 import Chip from '@material-ui/core/Chip';
 import { title, generateAlertContent } from '../../../helper.js'
+import classnames from "classnames";
+import { Box, IconButton } from "@material-ui/core";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CancelIcon from "@material-ui/icons/Cancel";
+import { colors as muicolors } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   headerRow: {
@@ -21,8 +26,9 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     display: 'flex',
+    marginBottom: theme.spacing(0.5),
     '& > *': {
-      color: '#555'
+      color: '#555',
     }
   },
   listTitle: {
@@ -45,20 +51,47 @@ const useStyles = makeStyles((theme) => ({
     height: 80,
     maxWidth: '30%',
     marginRight: theme.spacing(2)  
-  }
+  },
+  iconButton: {
+    padding: 0,
+    color: muicolors.grey[400],
+    '&:hover':{
+      color: muicolors.grey[600]
+    }
+  },
+  iconButtonActive: {
+    color: muicolors.grey[600]
+  },
 }));
 
 const AlertListItem = ({alertItem}) => {
 
   const classes = useStyles();
+  const [ feedback, setFeedback ] = useState(alertItem.feedback);
 
+  function submitFeedback(id, feedback){
+    axios.put( serverURL+'alert?id='+id, {
+      feedback: feedback,
+    })
+    setFeedback(feedback)
+  }
   return (
-  <ListItem button onClick={()=>{}} className={classes.listItem}>
-    <div>
+  <ListItem button onClick={()=>{}} className={classes.listItem}
+    style={{backgroundColor: alertItem.category == 'alert'? muicolors.red[100]: muicolors.green[100]}}
+  >
+    <Box marginRight={6}>
       <Typography className={classes.listTitle}>{title(alertItem.type)}</Typography>
       <Typography variant="subtitle2">{title(alertItem.category)} - {alertItem.date.substring(0, 10)}</Typography>
       <Typography variant="body2" className={classes.bodyText}>{generateAlertContent(alertItem)}</Typography>
-    </div>
+    </Box>
+    <div className={classes.feedbackButtonContainer}>
+        <IconButton className={classnames(classes.iconButton, feedback? classes.iconButtonActive: null)} onClick={()=>submitFeedback(alertItem.id, true)}>
+          <CheckCircleIcon/>
+        </IconButton>
+        <IconButton className={classnames(classes.iconButton, feedback === false? classes.iconButtonActive: null)} onClick={()=>submitFeedback(alertItem.id, false)}>
+        <CancelIcon/>
+        </IconButton>
+      </div>
   </ListItem>
   )
 };

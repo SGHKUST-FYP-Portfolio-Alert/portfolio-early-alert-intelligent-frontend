@@ -13,6 +13,7 @@ import SearchBox from "../components/SearchBox";
 import { escapeRegExp } from "../helper";
 import debounce from 'lodash/debounce';
 import { Typography } from "@material-ui/core";
+import TopicsRow from "./Counterparty/components/TopicsRow";
 
 const useStyles = makeStyles((theme) => ({
   counterpartyList: {
@@ -108,11 +109,7 @@ const CounterpartyList = (props) => {
       headerName: 'Keywords',
       width: 500,
       renderCell: (params) => 
-        <React.Fragment>
-          {Object.entries(params.value || {}).filter(([_, count]) => count >1).sort((a, b)=> a[1] < b[1]).slice(0, 3).map(
-            ([k, v]) => <Chip size='small' key={k} className={classes.keywordChips} label={`${k}:${v}`} />
-          )}
-        </React.Fragment>
+        <TopicsRow topic_count={params.value}/>
     }
   ]
 
@@ -129,10 +126,11 @@ const CounterpartyList = (props) => {
         >
           Delete
         </Button>
-        <SearchBox
-          onInputChange={(evt, val)=>debounce(setSearchText, 200)(val)}
+        {<SearchBox
+          clearOnBlur={false}
+          onInputChange={(evt, val)=>{debounce(setSearchText, 100)(val)}}
           open={false}
-        />
+        />}
       </div>
       <Paper className={classes.listContainer}>
       { data.length > 0 ?

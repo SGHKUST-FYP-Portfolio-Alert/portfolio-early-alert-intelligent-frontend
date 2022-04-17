@@ -88,7 +88,6 @@ export const priceDataConfig = [
   {
     name: 'Candlestick',
     type: 'hollowcandlestick',
-    enableMouseTracking: false,
     key: 'price',
     group: 'Price',
     compare: 'percent',
@@ -103,11 +102,12 @@ export const priceDataConfig = [
     lineWidth: 0.5,
     group: 'Price',
     key: 'price',
+    visible: false,
+    showInLegend: false,
     compare: 'percent',
     tooltip: {
       valueDecimals: 2,
     },
-    legendIndex: 2,
     yAxis: 'price'
   }
 ]
@@ -215,5 +215,6 @@ export const chartOptions = {
   },
   chart: {
     height: 460
-  }
+  },
+  tooltip: {split: false, shared: false}
 }

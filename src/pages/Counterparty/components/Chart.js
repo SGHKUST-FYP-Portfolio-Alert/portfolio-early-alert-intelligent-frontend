@@ -126,11 +126,12 @@ const Chart = (props) => {
     ...chartOptions,
     chart: { ...chartOptions.chart, events: { 
       render: function(){ highcharts = this},
-      click: function(e){setNewsListParam({ date: timestampToNearestDate(e.xAxis[0].value), page: 1})},
+      click: function(e){
+        setNewsListParam({ date: timestampToNearestDate(this.hoverPoint.category), page: 1})},
     }},
     plotOptions: {
       series: { ...chartOptions.plotOptions.series,
-        events: {click: function(e){setNewsListParam({ date: timestampToNearestDate(e.point.category), page: 1})},}
+        events: {click: function(e){ setNewsListParam({ date: timestampToNearestDate(e.point.category), page: 1})},}
       },
       column: { ...chartOptions.plotOptions.column,
         events: {click: function(e){setNewsListParam({ date: timestampToNearestDate(e.point.category), page: 1})},}

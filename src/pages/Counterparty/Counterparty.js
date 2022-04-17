@@ -18,6 +18,7 @@ import AlertList from './components/AlertList';
 import CircularBarWithLabel from '../../components/CircularBarWithLabel';
 import { getSentimentColor } from '../../helper';
 import { SentimentPopover } from './components/popover';
+import TopicsRow from './components/TopicsRow';
 
 const useStyles = makeStyles((theme) => ({
   counterparty: {
@@ -130,12 +131,7 @@ const Counterparty = (props) => {
         <Typography className={classes.marginLeft}>
           Keywords:
         </Typography>
-        <div className={classes.keywordChipsContainer}>
-          {Object.entries(data?.counterpartyInfo?.data?.topic_count||{})
-            .sort((a, b)=> a[1] < b[1]).slice(0, 3)
-            .map(([k, v]) => <Chip size='small' label={`${k}:${v}`} />)
-          }
-        </div>
+        <TopicsRow topic_count={data?.counterpartyInfo?.data?.topic_count}/>
       </div>
       <Paper className={classes.paper}>
         {(chartData.price && chartData.calculation) ?

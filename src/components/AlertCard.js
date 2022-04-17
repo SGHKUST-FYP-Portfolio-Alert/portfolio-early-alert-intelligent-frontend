@@ -17,6 +17,7 @@ import { serverURL } from '../constants';
 import { useState } from 'react';
 import { getSentimentColor } from '../helper';
 import CircularBarWithLabel from './CircularBarWithLabel';
+import TopicsRow from '../pages/Counterparty/components/TopicsRow';
 
 const useStyles = makeStyles((theme) => ({
     companyName: {
@@ -43,11 +44,6 @@ const useStyles = makeStyles((theme) => ({
     cardReminder: {
       backgroundColor: colors.green[200],
       borderColor: colors.green[500]
-    },
-    keywordRow: {
-      '& > *': {
-        margin: theme.spacing(0.5),
-      }
     },
     feedbackRow: {
       backgroundColor: colors.grey[200],
@@ -132,14 +128,7 @@ const AlertCard = (props) => {
             <Typography>
             {generateAlertContent(item)}
             </Typography>
-            <div className={classes.keywordRow}>
-              {Object.entries(item?.data?.topic_count || {})
-                .filter(([k, v]) => v > 1)
-                .sort((a, b)=> a[1] < b[1])
-                .slice(0, 3)
-                .map(([k, v]) => <Chip key={k} label={`${k}:${v}`}/>)
-              }
-            </div>
+            <TopicsRow topic_count={item.data?.topic_count} />
           </div>
           <CircularBarWithLabel
             max={1} min={-1} 

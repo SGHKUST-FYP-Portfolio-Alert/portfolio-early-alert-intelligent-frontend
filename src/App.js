@@ -30,7 +30,7 @@ import { colors } from '@material-ui/core';
 const theme = createTheme({
   palette: {
     background: {
-      default: colors.grey[200],
+      default: '#e2e7e9',
     },
     primary: {
       main: '#000'

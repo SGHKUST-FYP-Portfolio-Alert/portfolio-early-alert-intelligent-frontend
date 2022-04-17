@@ -45,6 +45,16 @@ export function getSentimentColorSharp(score){
     return colors.neutral
 }
 
+export function getIntensityColor(intensity){
+
+    const value = Math.min(intensity, 1)
+    const base = { r: 250, g: 250, b:250}
+    const max = { r: 120, g: 120, b: 120}
+    const d_pos = { r: max.r - base.r, g: max.g - base.g, b: max.b - base.b}
+    
+    return `rgb(${parseInt(base.r+d_pos.r*value)}, ${parseInt(base.g+d_pos.g*value)}, ${parseInt(base.b+d_pos.b*value)})` 
+}
+
 export function escapeRegExp(value) {
     return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
   }
