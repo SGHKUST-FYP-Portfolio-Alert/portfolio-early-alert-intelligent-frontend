@@ -117,7 +117,7 @@ const NewsList = (props) => {
         setData(response.data)
       })
       .catch((error)=> console.log("TODO error handling", error))
-  }, [page, date])
+  }, [page, date, counterparty])
 
   function handlePageChange(evt, page){
     setNewsListParam({...newsListParam, page})

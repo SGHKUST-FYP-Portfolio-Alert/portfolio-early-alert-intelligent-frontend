@@ -153,6 +153,11 @@ export const chartOptions = {
     lineWidth: 2,
     tickPixelInterval: 25,
     showEmpty: false,
+    plotBands: [
+      {from: -1, to: 0, color: colors.red[50], },
+      {from: 0, to: 0.3, color: colors.grey[50], },
+      {from: 0.3, to: 1, color: colors.green[50], },
+    ]
   },{
     id: 'price',
     title: { text: 'Stock Price'},

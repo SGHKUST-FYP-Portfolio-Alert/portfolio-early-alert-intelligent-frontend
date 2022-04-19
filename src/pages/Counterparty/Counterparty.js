@@ -82,6 +82,8 @@ const Counterparty = (props) => {
   const [ newsListParam, setNewsListParam ] = useState({page: 1})
 
   useEffect(()=>{
+    setData({})
+    setChartData({})
 
     axios.get(serverURL + `counterparty?symbol=${counterparty}&detailed=true`)
     .then((response)=>{
@@ -109,7 +111,7 @@ const Counterparty = (props) => {
       })
       .catch((error)=> displayMessage({severity: 'error', message: error.toString()}))
 
-  }, []);
+  }, [counterparty]);
 
 
   return (

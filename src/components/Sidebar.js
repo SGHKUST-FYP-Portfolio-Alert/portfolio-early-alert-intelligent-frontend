@@ -86,6 +86,7 @@ const Sidebar = (props) => {
         onChange={(evt, val) => history.push('counterparty?symbol='+val.symbol)}
         style={{width: 140, backgroundColor: 'white', opacity: '70%'}}
         renderOption={renderOption}
+        getOptionLabel={(option) => option.symbol}
       />
     },
     {

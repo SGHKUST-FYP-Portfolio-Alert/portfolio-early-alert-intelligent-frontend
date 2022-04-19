@@ -16,7 +16,7 @@ const PieSentiment = ({data}) => {
   }
   const options = data? {
     ...pieChartConfig,
-    title: {...pieChartConfig.title, text: 'Portfolio Sentiment',},
+    title: {...pieChartConfig.title, text: 'Counterparty Sentiments',},
     series: [{
       ...pieChartConfig.series,
       data: Object.entries(data || {}).map(([k, v])=>({...sentiment_param[k], y: v}))
