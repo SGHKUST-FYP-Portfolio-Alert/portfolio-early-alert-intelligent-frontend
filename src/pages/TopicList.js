@@ -65,7 +65,10 @@ const TopicList = (props) => {
     }, {
       field: 'counterparties',
       headerName: 'Counterparties',
-      width: 300
+      width: 300,
+      sortComparator: function (v1, v2){
+        return v1.toString() > v2.toString()
+      }
     }
   ]
 
