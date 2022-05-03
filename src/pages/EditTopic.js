@@ -190,11 +190,11 @@ const EditTopic = (props) => {
       <TopicSuggestion />
       
       <Grid component="label" container alignItems="center" spacing={0}>
-        <Grid item>Track this topic for All</Grid>
+        <Grid item>Track this topic for Selected</Grid>
         <Grid item>
-          <Switch checked={topicData.counterparties !== 'global'} onClick={handleSwitchClick} name="checkedC" />
+          <Switch checked={topicData.counterparties == 'global'} onClick={handleSwitchClick} name="checkedC" />
         </Grid>
-        <Grid item>Selected Counterparties</Grid>
+        <Grid item>All Counterparties</Grid>
       </Grid>
       { topicData.counterparties !== 'global' &&
         <CounterpartyList

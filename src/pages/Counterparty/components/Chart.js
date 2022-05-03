@@ -151,7 +151,7 @@ const Chart = (props) => {
       <Button variant="contained" size="small" 
         onClick={()=>history.push(`/edit-topic?symbol=${counterparty}`)}
       >
-        Add Keywords
+        Add Topics
       </Button>
     </div>
     <HighchartsReact

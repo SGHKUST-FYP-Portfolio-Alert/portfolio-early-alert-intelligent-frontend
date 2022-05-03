@@ -51,7 +51,9 @@ const CounterpartyList = (props) => {
   const filteredCounterparties = counterparties.filter((row) =>
     Object.keys(row).some(
       (field) =>  searchRegex.test(
-        typeof row[field] == 'object'? Object.keys(row[field]).toString(): row[field]?.toString()
+        typeof row[field] == 'object'? 
+          Object.entries(row[field]).sort(([,a],[,b]) => a<b).slice(0,3).toString():
+          row[field]?.toString()
       )
     )
   )

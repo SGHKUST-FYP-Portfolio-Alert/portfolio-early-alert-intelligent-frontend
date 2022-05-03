@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme)=>({
   }
 }))
 
-const TopicsRow = ({topic_count, threshold = 0, displayRest = true}) => {
+const TopicsRow = ({topic_count, threshold = 0, displayRest = false}) => {
 
   const classes = useStyles()
   const [ open, setOpen ] = useState(false)
