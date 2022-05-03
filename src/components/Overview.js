@@ -37,7 +37,7 @@ const PieCompareToYesterday = ({data}) => {
   }
   const options = data? {
     ...pieChartConfig,
-    title: {...pieChartConfig.title, text: 'Last Day Variation'},
+    title: {...pieChartConfig.title, text: 'Intraday Variation'},
     series: [{
       ...pieChartConfig.series,
       data: Object.entries(data || {}).map(([k, v])=>({...d_sentiment_param[k], y: v}))
